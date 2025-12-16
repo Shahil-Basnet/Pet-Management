@@ -4,31 +4,55 @@
  */
 package Controller;
 import Model.Dog;
+import java.util.ArrayList;
+
 /**
  *
  * @author Shahil
  */
 public class DogController {
     /**
-     * Creates "Dog" object
+     * Creates "Dog" object and adds to the array list 
+     * 
+     * @param dogList arrayList? of DogModel
+     * @throws
+     */
+    public void addDog(ArrayList<Dog> dogList){
+        
+    }
+    
+    /**
+     * Deletes existing "Dog" object from the array list 
      * 
      * @param dogList arrayList? of DogModel
      * @return
      * @throws
      */
-    public void addDog(){
+    public void deleteDog(ArrayList<Dog> dogList){
         
     }
-    
-    public void deleteDog(){
+    /**
+     * Updates details of existing "Dog" object in array list
+     * 
+     * @param dogList arrayList of DogModel
+     * @return
+     * @throws
+     */
+    public void updateDog(ArrayList<Dog> dogList){
         
     }
-    
-    public void updateDog(){
+    /**
+     * Validates details "Dog" object
+     *  Checks if the dogId exists when adding, deleting, updating or viewing a dog
+     * 
+     * @param dogId
+     * @param mode
+     * @param dogList arrayList of DogModel
+     * @return true if dog exists or false if dog doesn't exits
+     * @throws
+     */
+    public boolean validateDog(int dogId, ArrayList<Dog> dogList, String mode){
         
-    }
-    
-    public void validateDogs(){
-        
+        return false;
     }
 }
