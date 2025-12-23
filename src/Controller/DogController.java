@@ -4,7 +4,7 @@
  */
 package Controller;
 import Model.Dog;
-import java.util.ArrayList;
+import java.util.LinkedList;
 
 /**
  *
@@ -12,34 +12,38 @@ import java.util.ArrayList;
  */
 public class DogController {
     /**
-     * Creates "Dog" object and adds to the array list 
+     * Adds "Dog" object to the linkedList 
      * 
-     * @param dogList arrayList? of DogModel
+     * @param dogList linkedList of DogModel
+     * @param dogObject object of dog with its data to add to the linkedList
+     * @return true if dog is added, else returns false
      * @throws
      */
-    public void addDog(ArrayList<Dog> dogList){
+    public boolean addDog(LinkedList<Dog> dogList, Dog dogObject){
         
+        return true;
     }
     
     /**
-     * Deletes existing "Dog" object from the array list 
+     * Deletes existing "Dog" object from the linkedList 
      * 
-     * @param dogList arrayList? of DogModel
-     * @return
+     * @param dogList linkedList of DogModel
+     * @return true if successfully deleted dog, else returns false
      * @throws
      */
-    public void deleteDog(ArrayList<Dog> dogList){
-        
+    public boolean deleteDog(LinkedList<Dog> dogList){
+        return false;
     }
     /**
-     * Updates details of existing "Dog" object in array list
+     * Updates details of existing "Dog" object in linkedList
      * 
      * @param dogList arrayList of DogModel
-     * @return
+     * @return true if successfully updated dog's details, else returns false
      * @throws
      */
-    public void updateDog(ArrayList<Dog> dogList){
+    public boolean updateDog(LinkedList<Dog> dogList){
         
+        return true;
     }
     /**
      * Validates details "Dog" object
@@ -47,11 +51,11 @@ public class DogController {
      * 
      * @param dogId
      * @param mode
-     * @param dogList arrayList of DogModel
+     * @param dogList linkedList of DogModel
      * @return true if dog exists or false if dog doesn't exits
      * @throws
      */
-    public boolean validateDog(int dogId, ArrayList<Dog> dogList, String mode){
+    public boolean validateDog(int dogId, LinkedList<Dog> dogList, String mode){
         
         return false;
     }
