@@ -745,8 +745,11 @@ public class DogView extends javax.swing.JFrame {
             if (!controller.addDog(newDog)) {
                 javax.swing.JOptionPane.showMessageDialog(this, "Dog with ID " + id + " already exists.", "Error", javax.swing.JOptionPane.ERROR_MESSAGE);
                 return;
+            } else {
+                controller.loadDataToTable(dogTable);
+                JOptionPane.showMessageDialog(this, "Dog with ID " + id + " successfully added", "Added", javax.swing.JOptionPane.INFORMATION_MESSAGE);
             }
-            controller.loadDataToTable(dogTable);
+
         } catch (NumberFormatException e) {
             javax.swing.JOptionPane.showMessageDialog(this, "Please enter valid values.", "Input Error", javax.swing.JOptionPane.ERROR_MESSAGE);
             return;
@@ -772,6 +775,12 @@ public class DogView extends javax.swing.JFrame {
             String breed = dogBreedField.getText().trim();
             String color = dogColorField.getText().trim();
             int age = Integer.parseInt(dogAgeField.getText());
+            if (age <= 0) {
+                JOptionPane.showMessageDialog(this,
+                        "Please enter valid age.", "Input Error",
+                        JOptionPane.ERROR_MESSAGE);
+            }
+
             float weight = Float.parseFloat(dogWeightField.getText());
             String gender = femaleRadioButton.isSelected() ? "Female" : "Male";
             String adoptionStatus = (String) adoptionStatusComboBox.getSelectedItem();
@@ -795,7 +804,7 @@ public class DogView extends javax.swing.JFrame {
 
         } catch (NumberFormatException e) {
             JOptionPane.showMessageDialog(this,
-                    "Please enter valid numbers for ID, Age, or Weight", "Input Error",
+                    "Please enter valid data.", "Input Error",
                     JOptionPane.ERROR_MESSAGE);
         } catch (Exception e) {
             JOptionPane.showMessageDialog(this,
@@ -839,16 +848,91 @@ public class DogView extends javax.swing.JFrame {
     }//GEN-LAST:event_editDogButtonActionPerformed
 
     private void deleteFromListButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_deleteFromListButtonActionPerformed
-        String idInput = JOptionPane.showInputDialog(this, "Enter the ID of the dog to delete:");
-        if (idInput == null) {
-            return;
-        }
-        int id = Integer.parseInt(idInput);
-        if (!controller.deleteDog(id)) {
-            JOptionPane.showMessageDialog(this, "Dog with ID " + id + " not found.", "Error", JOptionPane.ERROR_MESSAGE);
-        } else {
-            controller.loadDataToTable(dogTable);
-            JOptionPane.showMessageDialog(this, "Dog with ID " + id + " deleted successfully.", "Success", JOptionPane.INFORMATION_MESSAGE);
+        try {
+            // Show input dialog for ID
+            String idInput = JOptionPane.showInputDialog(
+                    this,
+                    "Enter the ID of the dog to delete:",
+                    "Delete Dog",
+                    JOptionPane.QUESTION_MESSAGE
+            );
+
+            // If user cancels or closes the dialog
+            if (idInput == null || idInput.trim().isEmpty()) {
+                return;
+            }
+
+            // Validate that the input is a positive integer
+            int id;
+            try {
+                id = Integer.parseInt(idInput);
+                if (id <= 0) {
+                    JOptionPane.showMessageDialog(
+                            this,
+                            "ID must be a positive number.",
+                            "Invalid Input",
+                            JOptionPane.WARNING_MESSAGE
+                    );
+                    return;
+                }
+            } catch (NumberFormatException e) {
+                JOptionPane.showMessageDialog(
+                        this,
+                        "Invalid ID. Please enter a valid number.",
+                        "Invalid Input",
+                        JOptionPane.ERROR_MESSAGE
+                );
+                return;
+            }
+
+            // Ask for confirmation before deleting
+            int confirm = JOptionPane.showConfirmDialog(
+                    this,
+                    "Are you sure you want to delete dog with ID: " + id + "?\nThis action cannot be undone.",
+                    "Confirm Deletion",
+                    JOptionPane.YES_NO_OPTION,
+                    JOptionPane.WARNING_MESSAGE
+            );
+
+            if (confirm == JOptionPane.YES_OPTION) {
+                // Attempt to delete the dog
+                boolean deleted = controller.deleteDog(id);
+
+                if (!deleted) {
+                    JOptionPane.showMessageDialog(
+                            this,
+                            "Dog with ID " + id + " was not found.",
+                            "Not Found",
+                            JOptionPane.ERROR_MESSAGE
+                    );
+                } else {
+                    controller.loadDataToTable(dogTable);
+
+                    JOptionPane.showMessageDialog(
+                            this,
+                            "Dog with ID " + id + " was successfully deleted.",
+                            "Success",
+                            JOptionPane.INFORMATION_MESSAGE
+                    );
+                }
+            } else {
+                // if user chooses not to delete
+                JOptionPane.showMessageDialog(
+                        this,
+                        "Deletion cancelled.",
+                        "Cancelled",
+                        JOptionPane.INFORMATION_MESSAGE
+                );
+            }
+
+        } catch (Exception e) {
+            // Catch any unexpected exceptions
+            JOptionPane.showMessageDialog(
+                    this,
+                    "An unexpected error occurred: " + e.getMessage(),
+                    "Error",
+                    JOptionPane.ERROR_MESSAGE
+            );
         }
     }//GEN-LAST:event_deleteFromListButtonActionPerformed
 
