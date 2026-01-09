@@ -18,7 +18,7 @@ import javax.swing.table.DefaultTableModel;
 public class DogView extends javax.swing.JFrame {
 
     private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(DogView.class.getName());
-    private CardLayout cardLayout;
+    private CardLayout cardLayout, cardLayoutAdmin;
     private DogController controller;
 
     /**
@@ -28,6 +28,7 @@ public class DogView extends javax.swing.JFrame {
         initComponents();
         cardLayout = (CardLayout) mainPanel.getLayout();
         cardLayout.show(mainPanel, "loginCard");
+        cardLayoutAdmin = (CardLayout) contentPanel.getLayout();
         controller = new DogController();
         controller.loadInitialData();
         controller.loadDataToTable(dogTable);
@@ -45,7 +46,7 @@ public class DogView extends javax.swing.JFrame {
         jLayeredPane1 = new javax.swing.JLayeredPane();
         genderButtonGroup = new javax.swing.ButtonGroup();
         mainPanel = new javax.swing.JPanel();
-        adminPanel = new javax.swing.JPanel();
+        adminPanelOld = new javax.swing.JPanel();
         mainAdminPanel = new javax.swing.JPanel();
         titlePanel = new javax.swing.JPanel();
         logoutButton = new javax.swing.JButton();
@@ -93,6 +94,21 @@ public class DogView extends javax.swing.JFrame {
         userButton = new javax.swing.JButton();
         jPanel4 = new javax.swing.JPanel();
         jPanel2 = new javax.swing.JPanel();
+        adminPanel = new javax.swing.JPanel();
+        headerPanel = new javax.swing.JPanel();
+        logoLabel = new javax.swing.JLabel();
+        navigationPanel = new javax.swing.JPanel();
+        dashboardButton = new javax.swing.JButton();
+        dogsPanelButton = new javax.swing.JButton();
+        usersPanelButton = new javax.swing.JButton();
+        adoptionsButton = new javax.swing.JButton();
+        historyPanelButton = new javax.swing.JButton();
+        contentPanel = new javax.swing.JPanel();
+        dashboardPanel = new javax.swing.JPanel();
+        dogsPanel = new javax.swing.JPanel();
+        usersManagementPanel = new javax.swing.JPanel();
+        adoptionsPanel = new javax.swing.JPanel();
+        historyPanel = new javax.swing.JPanel();
 
         javax.swing.GroupLayout jLayeredPane1Layout = new javax.swing.GroupLayout(jLayeredPane1);
         jLayeredPane1.setLayout(jLayeredPane1Layout);
@@ -107,10 +123,11 @@ public class DogView extends javax.swing.JFrame {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
+        mainPanel.setPreferredSize(new java.awt.Dimension(1200, 800));
         mainPanel.setLayout(new java.awt.CardLayout());
 
-        adminPanel.setBackground(new java.awt.Color(204, 204, 204));
-        adminPanel.setLayout(new java.awt.CardLayout());
+        adminPanelOld.setBackground(new java.awt.Color(204, 204, 204));
+        adminPanelOld.setLayout(new java.awt.CardLayout());
 
         mainAdminPanel.setBackground(new java.awt.Color(255, 255, 255));
 
@@ -349,7 +366,7 @@ public class DogView extends javax.swing.JFrame {
                                 .addComponent(editDogButton, javax.swing.GroupLayout.PREFERRED_SIZE, 138, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                 .addComponent(updateTableButton, javax.swing.GroupLayout.PREFERRED_SIZE, 138, javax.swing.GroupLayout.PREFERRED_SIZE)))))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap(38, Short.MAX_VALUE))
         );
         formDetailsPanelLayout.setVerticalGroup(
             formDetailsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -405,9 +422,11 @@ public class DogView extends javax.swing.JFrame {
             formPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, formPanelLayout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(formPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(formDetailsPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(formTitlePanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addGroup(formPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(formTitlePanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addGroup(formPanelLayout.createSequentialGroup()
+                        .addComponent(formDetailsPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(0, 0, Short.MAX_VALUE)))
                 .addContainerGap())
         );
         formPanelLayout.setVerticalGroup(
@@ -435,7 +454,7 @@ public class DogView extends javax.swing.JFrame {
         tableTitlePanelLayout.setHorizontalGroup(
             tableTitlePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, tableTitlePanelLayout.createSequentialGroup()
-                .addContainerGap(323, Short.MAX_VALUE)
+                .addContainerGap(321, Short.MAX_VALUE)
                 .addComponent(tableTitleLabel)
                 .addGap(323, 323, 323))
         );
@@ -488,7 +507,7 @@ public class DogView extends javax.swing.JFrame {
         tablePanel.setLayout(tablePanelLayout);
         tablePanelLayout.setHorizontalGroup(
             tablePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(tableTitlePanel, javax.swing.GroupLayout.DEFAULT_SIZE, 800, Short.MAX_VALUE)
+            .addComponent(tableTitlePanel, javax.swing.GroupLayout.DEFAULT_SIZE, 798, Short.MAX_VALUE)
             .addGroup(tablePanelLayout.createSequentialGroup()
                 .addGap(15, 15, 15)
                 .addGroup(tablePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -525,7 +544,7 @@ public class DogView extends javax.swing.JFrame {
             .addGroup(crudPanelLayout.createSequentialGroup()
                 .addComponent(formPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(tablePanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addComponent(tablePanel, javax.swing.GroupLayout.DEFAULT_SIZE, 794, Short.MAX_VALUE))
         );
         crudPanelLayout.setVerticalGroup(
             crudPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -548,9 +567,9 @@ public class DogView extends javax.swing.JFrame {
                 .addComponent(crudPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
 
-        adminPanel.add(mainAdminPanel, "card2");
+        adminPanelOld.add(mainAdminPanel, "card2");
 
-        mainPanel.add(adminPanel, "adminCard");
+        mainPanel.add(adminPanelOld, "adminCardOld");
 
         userPanel.setBackground(new java.awt.Color(255, 255, 102));
 
@@ -566,7 +585,7 @@ public class DogView extends javax.swing.JFrame {
         userPanelLayout.setHorizontalGroup(
             userPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, userPanelLayout.createSequentialGroup()
-                .addContainerGap(1105, Short.MAX_VALUE)
+                .addContainerGap(1099, Short.MAX_VALUE)
                 .addComponent(logoutButtonUser)
                 .addGap(29, 29, 29))
         );
@@ -575,7 +594,7 @@ public class DogView extends javax.swing.JFrame {
             .addGroup(userPanelLayout.createSequentialGroup()
                 .addGap(18, 18, 18)
                 .addComponent(logoutButtonUser)
-                .addContainerGap(710, Short.MAX_VALUE))
+                .addContainerGap(759, Short.MAX_VALUE))
         );
 
         mainPanel.add(userPanel, "userCard");
@@ -591,7 +610,7 @@ public class DogView extends javax.swing.JFrame {
         jPanel6.setLayout(jPanel6Layout);
         jPanel6Layout.setHorizontalGroup(
             jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 1206, Short.MAX_VALUE)
+            .addGap(0, 1200, Short.MAX_VALUE)
         );
         jPanel6Layout.setVerticalGroup(
             jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -610,7 +629,7 @@ public class DogView extends javax.swing.JFrame {
         );
         jPanel5Layout.setVerticalGroup(
             jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 551, Short.MAX_VALUE)
+            .addGap(0, 588, Short.MAX_VALUE)
         );
 
         loginPanel.add(jPanel5, java.awt.BorderLayout.LINE_END);
@@ -641,12 +660,12 @@ public class DogView extends javax.swing.JFrame {
                 .addComponent(adminButton, javax.swing.GroupLayout.PREFERRED_SIZE, 183, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(159, 159, 159)
                 .addComponent(userButton, javax.swing.GroupLayout.PREFERRED_SIZE, 183, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(231, Short.MAX_VALUE))
+                .addContainerGap(225, Short.MAX_VALUE))
         );
         jPanel3Layout.setVerticalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel3Layout.createSequentialGroup()
-                .addContainerGap(234, Short.MAX_VALUE)
+                .addContainerGap(271, Short.MAX_VALUE)
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(adminButton, javax.swing.GroupLayout.PREFERRED_SIZE, 116, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(userButton, javax.swing.GroupLayout.PREFERRED_SIZE, 116, javax.swing.GroupLayout.PREFERRED_SIZE))
@@ -661,11 +680,11 @@ public class DogView extends javax.swing.JFrame {
         jPanel4.setLayout(jPanel4Layout);
         jPanel4Layout.setHorizontalGroup(
             jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 1206, Short.MAX_VALUE)
+            .addGap(0, 1200, Short.MAX_VALUE)
         );
         jPanel4Layout.setVerticalGroup(
             jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 100, Short.MAX_VALUE)
+            .addGap(0, 112, Short.MAX_VALUE)
         );
 
         loginPanel.add(jPanel4, java.awt.BorderLayout.PAGE_START);
@@ -680,12 +699,215 @@ public class DogView extends javax.swing.JFrame {
         );
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 551, Short.MAX_VALUE)
+            .addGap(0, 588, Short.MAX_VALUE)
         );
 
         loginPanel.add(jPanel2, java.awt.BorderLayout.LINE_START);
 
         mainPanel.add(loginPanel, "loginCard");
+
+        adminPanel.setBackground(new java.awt.Color(245, 245, 245));
+        adminPanel.setPreferredSize(new java.awt.Dimension(1200, 800));
+        adminPanel.setLayout(null);
+
+        headerPanel.setBackground(new java.awt.Color(44, 62, 80));
+        headerPanel.setPreferredSize(new java.awt.Dimension(1200, 80));
+
+        logoLabel.setText("LOGO");
+
+        javax.swing.GroupLayout headerPanelLayout = new javax.swing.GroupLayout(headerPanel);
+        headerPanel.setLayout(headerPanelLayout);
+        headerPanelLayout.setHorizontalGroup(
+            headerPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(headerPanelLayout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(logoLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 75, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
+        headerPanelLayout.setVerticalGroup(
+            headerPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(headerPanelLayout.createSequentialGroup()
+                .addGap(15, 15, 15)
+                .addComponent(logoLabel, javax.swing.GroupLayout.DEFAULT_SIZE, 49, Short.MAX_VALUE)
+                .addContainerGap())
+        );
+
+        adminPanel.add(headerPanel);
+        headerPanel.setBounds(0, 0, 1200, 70);
+
+        navigationPanel.setBackground(new java.awt.Color(204, 204, 204));
+        navigationPanel.setMinimumSize(new java.awt.Dimension(200, 720));
+        navigationPanel.setPreferredSize(new java.awt.Dimension(210, 720));
+
+        dashboardButton.setBackground(new java.awt.Color(102, 102, 102));
+        dashboardButton.setFont(new java.awt.Font("Franklin Gothic Book", 0, 14)); // NOI18N
+        dashboardButton.setText("Dashboard");
+        dashboardButton.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
+        dashboardButton.setBorderPainted(false);
+        dashboardButton.setFocusPainted(false);
+        dashboardButton.setPreferredSize(new java.awt.Dimension(70, 20));
+        dashboardButton.setRolloverEnabled(false);
+        dashboardButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                dashboardButtonActionPerformed(evt);
+            }
+        });
+
+        dogsPanelButton.setBackground(new java.awt.Color(102, 102, 102));
+        dogsPanelButton.setFont(new java.awt.Font("Franklin Gothic Book", 0, 14)); // NOI18N
+        dogsPanelButton.setText("Dogs");
+        dogsPanelButton.setMargin(new java.awt.Insets(0, 0, 0, 0));
+        dogsPanelButton.setPreferredSize(new java.awt.Dimension(70, 20));
+        dogsPanelButton.setRolloverEnabled(false);
+        dogsPanelButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                dogsPanelButtonActionPerformed(evt);
+            }
+        });
+
+        usersPanelButton.setBackground(new java.awt.Color(102, 102, 102));
+        usersPanelButton.setFont(new java.awt.Font("Franklin Gothic Book", 0, 14)); // NOI18N
+        usersPanelButton.setText("Users");
+        usersPanelButton.setPreferredSize(new java.awt.Dimension(200, 60));
+        usersPanelButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                usersPanelButtonActionPerformed(evt);
+            }
+        });
+
+        adoptionsButton.setBackground(new java.awt.Color(102, 102, 102));
+        adoptionsButton.setFont(new java.awt.Font("Franklin Gothic Book", 0, 14)); // NOI18N
+        adoptionsButton.setText("Adoptions");
+        adoptionsButton.setPreferredSize(new java.awt.Dimension(200, 60));
+        adoptionsButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                adoptionsButtonActionPerformed(evt);
+            }
+        });
+
+        historyPanelButton.setBackground(new java.awt.Color(102, 102, 102));
+        historyPanelButton.setFont(new java.awt.Font("Franklin Gothic Book", 0, 14)); // NOI18N
+        historyPanelButton.setText("History");
+        historyPanelButton.setPreferredSize(new java.awt.Dimension(200, 60));
+        historyPanelButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                historyPanelButtonActionPerformed(evt);
+            }
+        });
+
+        javax.swing.GroupLayout navigationPanelLayout = new javax.swing.GroupLayout(navigationPanel);
+        navigationPanel.setLayout(navigationPanelLayout);
+        navigationPanelLayout.setHorizontalGroup(
+            navigationPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(dashboardButton, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE)
+            .addComponent(dogsPanelButton, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE)
+            .addComponent(usersPanelButton, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+            .addComponent(historyPanelButton, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+            .addComponent(adoptionsButton, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+        );
+        navigationPanelLayout.setVerticalGroup(
+            navigationPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(navigationPanelLayout.createSequentialGroup()
+                .addGap(1, 1, 1)
+                .addComponent(dashboardButton, javax.swing.GroupLayout.PREFERRED_SIZE, 60, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(3, 3, 3)
+                .addComponent(dogsPanelButton, javax.swing.GroupLayout.PREFERRED_SIZE, 60, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(3, 3, 3)
+                .addComponent(usersPanelButton, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(3, 3, 3)
+                .addComponent(adoptionsButton, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(3, 3, 3)
+                .addComponent(historyPanelButton, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap())
+        );
+
+        adminPanel.add(navigationPanel);
+        navigationPanel.setBounds(0, 71, 200, 730);
+
+        contentPanel.setBackground(new java.awt.Color(220, 220, 220));
+        contentPanel.setForeground(new java.awt.Color(245, 245, 245));
+        contentPanel.setLayout(new java.awt.CardLayout());
+
+        dashboardPanel.setBackground(new java.awt.Color(204, 255, 204));
+
+        javax.swing.GroupLayout dashboardPanelLayout = new javax.swing.GroupLayout(dashboardPanel);
+        dashboardPanel.setLayout(dashboardPanelLayout);
+        dashboardPanelLayout.setHorizontalGroup(
+            dashboardPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 1000, Short.MAX_VALUE)
+        );
+        dashboardPanelLayout.setVerticalGroup(
+            dashboardPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 730, Short.MAX_VALUE)
+        );
+
+        contentPanel.add(dashboardPanel, "dashboardCard");
+
+        dogsPanel.setBackground(new java.awt.Color(204, 255, 51));
+
+        javax.swing.GroupLayout dogsPanelLayout = new javax.swing.GroupLayout(dogsPanel);
+        dogsPanel.setLayout(dogsPanelLayout);
+        dogsPanelLayout.setHorizontalGroup(
+            dogsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 1000, Short.MAX_VALUE)
+        );
+        dogsPanelLayout.setVerticalGroup(
+            dogsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 730, Short.MAX_VALUE)
+        );
+
+        contentPanel.add(dogsPanel, "dogsCRUDCard");
+
+        usersManagementPanel.setBackground(new java.awt.Color(255, 102, 51));
+
+        javax.swing.GroupLayout usersManagementPanelLayout = new javax.swing.GroupLayout(usersManagementPanel);
+        usersManagementPanel.setLayout(usersManagementPanelLayout);
+        usersManagementPanelLayout.setHorizontalGroup(
+            usersManagementPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 1000, Short.MAX_VALUE)
+        );
+        usersManagementPanelLayout.setVerticalGroup(
+            usersManagementPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 730, Short.MAX_VALUE)
+        );
+
+        contentPanel.add(usersManagementPanel, "usersManagementCard");
+        usersManagementPanel.getAccessibleContext().setAccessibleName("");
+
+        adoptionsPanel.setBackground(new java.awt.Color(102, 102, 0));
+
+        javax.swing.GroupLayout adoptionsPanelLayout = new javax.swing.GroupLayout(adoptionsPanel);
+        adoptionsPanel.setLayout(adoptionsPanelLayout);
+        adoptionsPanelLayout.setHorizontalGroup(
+            adoptionsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 1000, Short.MAX_VALUE)
+        );
+        adoptionsPanelLayout.setVerticalGroup(
+            adoptionsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 730, Short.MAX_VALUE)
+        );
+
+        contentPanel.add(adoptionsPanel, "adoptionsCard");
+
+        historyPanel.setBackground(new java.awt.Color(153, 0, 0));
+
+        javax.swing.GroupLayout historyPanelLayout = new javax.swing.GroupLayout(historyPanel);
+        historyPanel.setLayout(historyPanelLayout);
+        historyPanelLayout.setHorizontalGroup(
+            historyPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 1000, Short.MAX_VALUE)
+        );
+        historyPanelLayout.setVerticalGroup(
+            historyPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 730, Short.MAX_VALUE)
+        );
+
+        contentPanel.add(historyPanel, "historyCard");
+
+        adminPanel.add(contentPanel);
+        contentPanel.setBounds(200, 70, 1000, 730);
+
+        mainPanel.add(adminPanel, "adminCard");
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -888,7 +1110,7 @@ public class DogView extends javax.swing.JFrame {
             // Ask for confirmation before deleting
             int confirm = JOptionPane.showConfirmDialog(
                     this,
-                    "Are you sure you want to delete dog with ID: " + id + "?\nThis action cannot be undone.",
+                    "Are you sure you want to delete dog with ID: " + id,
                     "Confirm Deletion",
                     JOptionPane.YES_NO_OPTION,
                     JOptionPane.WARNING_MESSAGE
@@ -936,6 +1158,26 @@ public class DogView extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_deleteFromListButtonActionPerformed
 
+    private void usersPanelButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_usersPanelButtonActionPerformed
+        cardLayoutAdmin.show(contentPanel, "usersManagementCard");
+    }//GEN-LAST:event_usersPanelButtonActionPerformed
+
+    private void historyPanelButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_historyPanelButtonActionPerformed
+        cardLayoutAdmin.show(contentPanel, "historyCard");
+    }//GEN-LAST:event_historyPanelButtonActionPerformed
+
+    private void dashboardButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_dashboardButtonActionPerformed
+        cardLayoutAdmin.show(contentPanel, "dashboardCard");
+    }//GEN-LAST:event_dashboardButtonActionPerformed
+
+    private void dogsPanelButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_dogsPanelButtonActionPerformed
+        cardLayoutAdmin.show(contentPanel, "dogsCRUDCard");
+    }//GEN-LAST:event_dogsPanelButtonActionPerformed
+
+    private void adoptionsButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_adoptionsButtonActionPerformed
+        cardLayoutAdmin.show(contentPanel, "adoptionsCard");
+    }//GEN-LAST:event_adoptionsButtonActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -965,9 +1207,15 @@ public class DogView extends javax.swing.JFrame {
     private javax.swing.JButton addDogButton;
     private javax.swing.JButton adminButton;
     private javax.swing.JPanel adminPanel;
+    private javax.swing.JPanel adminPanelOld;
     private javax.swing.JComboBox<String> adoptionStatusComboBox;
+    private javax.swing.JButton adoptionsButton;
+    private javax.swing.JPanel adoptionsPanel;
     private javax.swing.JButton clearFieldsButton;
+    private javax.swing.JPanel contentPanel;
     private javax.swing.JPanel crudPanel;
+    private javax.swing.JButton dashboardButton;
+    private javax.swing.JPanel dashboardPanel;
     private javax.swing.JButton deleteFromListButton;
     private javax.swing.JLabel dogAdoptionStatusLabel;
     private javax.swing.JTextField dogAgeField;
@@ -984,6 +1232,8 @@ public class DogView extends javax.swing.JFrame {
     private javax.swing.JTable dogTable;
     private javax.swing.JTextField dogWeightField;
     private javax.swing.JLabel dogWeightLabel;
+    private javax.swing.JPanel dogsPanel;
+    private javax.swing.JButton dogsPanelButton;
     private javax.swing.JButton editDogButton;
     private javax.swing.JRadioButton femaleRadioButton;
     private javax.swing.JPanel formDetailsPanel;
@@ -992,6 +1242,9 @@ public class DogView extends javax.swing.JFrame {
     private javax.swing.JPanel formTitlePanel;
     private javax.swing.ButtonGroup genderButtonGroup;
     private javax.swing.JPanel genderPanel;
+    private javax.swing.JPanel headerPanel;
+    private javax.swing.JPanel historyPanel;
+    private javax.swing.JButton historyPanelButton;
     private javax.swing.JLayeredPane jLayeredPane1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;
@@ -1000,11 +1253,13 @@ public class DogView extends javax.swing.JFrame {
     private javax.swing.JPanel jPanel6;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JPanel loginPanel;
+    private javax.swing.JLabel logoLabel;
     private javax.swing.JButton logoutButton;
     private javax.swing.JButton logoutButtonUser;
     private javax.swing.JPanel mainAdminPanel;
     private javax.swing.JPanel mainPanel;
     private javax.swing.JRadioButton maleRadioButton;
+    private javax.swing.JPanel navigationPanel;
     private javax.swing.JButton refreshTableButton;
     private javax.swing.JPanel tablePanel;
     private javax.swing.JLabel tableTitleLabel;
@@ -1013,5 +1268,7 @@ public class DogView extends javax.swing.JFrame {
     private javax.swing.JButton updateTableButton;
     private javax.swing.JButton userButton;
     private javax.swing.JPanel userPanel;
+    private javax.swing.JPanel usersManagementPanel;
+    private javax.swing.JButton usersPanelButton;
     // End of variables declaration//GEN-END:variables
 }
