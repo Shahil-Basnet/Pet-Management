@@ -8,6 +8,7 @@ import Model.Dog;
 import java.util.LinkedList;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.JTable;
+import Controller.Sort;
 
 /**
  *
@@ -17,11 +18,11 @@ public class DogController {
     LinkedList<Dog> dogList = new LinkedList<Dog>();
 
     public void loadInitialData() {
-        dogList.add(new Dog(1, "Buddy", "Golden Retriever", "Unadopted", 3, "Male", 30.5f, "Golden"));
-        dogList.add(new Dog(2, "Bella", "Labrador", "Adopted", 2, "Female", 25.0f, "Black"));
-        dogList.add(new Dog(3, "Charlie", "Beagle", "Unadopted", 4, "Male", 20.0f, "Brown"));
-        dogList.add(new Dog(4, "Max", "Bulldog", "Unadopted", 5, "Male", 35.0f, "Brindle"));
-        dogList.add(new Dog(5, "Daisy", "Poodle", "Unadopted", 2, "Female", 22.0f, "White"));
+        dogList.add(new Dog(1, "Buddy", "Golden Retriever", "Unadopted", 3, "Male", 30.5f, "Golden",""));
+        dogList.add(new Dog(2, "Bella", "Labrador", "Adopted", 2, "Female", 25.0f, "Black", ""));
+        dogList.add(new Dog(3, "Charlie", "Beagle", "Unadopted", 4, "Male", 20.0f, "Brown", ""));
+        dogList.add(new Dog(4, "Max", "Bulldog", "Unadopted", 5, "Male", 35.0f, "Brindle", ""));
+        dogList.add(new Dog(5, "Daisy", "Poodle", "Unadopted", 2, "Female", 22.0f, "White", ""));
 
     }
 
@@ -127,4 +128,19 @@ public class DogController {
            return false;
     }
     
+    public void sortByAge(){
+        Sort.insertionSortByAge(dogList);
+    }
+    
+    public void sortByName(){
+        Sort.mergeSortByWeight(dogList);
+    }
+    
+    public void sortByWeight(){
+        Sort.mergeSortByWeight(dogList);
+    }
+    
+    public void sortById(){
+        Sort.bubbleSortById(dogList);
+    }
 }

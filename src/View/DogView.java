@@ -11,6 +11,8 @@ import java.awt.Color;
 import javax.accessibility.AccessibleAction;
 
 import javax.swing.BorderFactory;
+import javax.swing.ImageIcon;
+import javax.swing.JFileChooser;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JTextField;
@@ -30,6 +32,7 @@ public class DogView extends javax.swing.JFrame {
     private CardLayout cardLayout, cardLayoutAdmin;
     private DogController controller;
     private boolean isEditMode = false;
+    private String selectedPhotoPath = null;
 
     /**
      * Creates new form DogView
@@ -79,11 +82,16 @@ public class DogView extends javax.swing.JFrame {
         dashboardPanel = new javax.swing.JPanel();
         dogsPanel = new javax.swing.JPanel();
         tablePanel = new javax.swing.JPanel();
-        jScrollPane2 = new javax.swing.JScrollPane();
+        dogScrollPane = new javax.swing.JScrollPane();
         dogTable = new javax.swing.JTable();
         refreshTableButton = new javax.swing.JButton();
         deleteFromListButton = new javax.swing.JButton();
         searchField = new javax.swing.JTextField();
+        searchTypeCombo = new javax.swing.JComboBox<>();
+        searchDogButton = new javax.swing.JButton();
+        sortOptionCombo = new javax.swing.JComboBox<>();
+        sortLabel = new javax.swing.JLabel();
+        sortButton = new javax.swing.JButton();
         formDetailsPanel = new javax.swing.JPanel();
         dogIdLabel = new javax.swing.JLabel();
         idErrorPanel = new javax.swing.JPanel();
@@ -120,6 +128,10 @@ public class DogView extends javax.swing.JFrame {
         clearFieldsButton = new javax.swing.JButton();
         saveButton = new javax.swing.JButton();
         cancelButton = new javax.swing.JButton();
+        photoFormLabel = new javax.swing.JLabel();
+        uploadPhotoButton = new javax.swing.JButton();
+        viewPhotoButton = new javax.swing.JButton();
+        removePhotoButton = new javax.swing.JButton();
         usersManagementPanel = new javax.swing.JPanel();
         adoptionsPanel = new javax.swing.JPanel();
         historyPanel = new javax.swing.JPanel();
@@ -187,7 +199,7 @@ public class DogView extends javax.swing.JFrame {
         );
         jPanel5Layout.setVerticalGroup(
             jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 588, Short.MAX_VALUE)
+            .addGap(0, 508, Short.MAX_VALUE)
         );
 
         loginPanel.add(jPanel5, java.awt.BorderLayout.LINE_END);
@@ -223,7 +235,7 @@ public class DogView extends javax.swing.JFrame {
         loginDetailsPanelLayout.setVerticalGroup(
             loginDetailsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, loginDetailsPanelLayout.createSequentialGroup()
-                .addContainerGap(271, Short.MAX_VALUE)
+                .addContainerGap(191, Short.MAX_VALUE)
                 .addGroup(loginDetailsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(adminButton, javax.swing.GroupLayout.PREFERRED_SIZE, 116, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(userButton, javax.swing.GroupLayout.PREFERRED_SIZE, 116, javax.swing.GroupLayout.PREFERRED_SIZE))
@@ -257,7 +269,7 @@ public class DogView extends javax.swing.JFrame {
         );
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 588, Short.MAX_VALUE)
+            .addGap(0, 508, Short.MAX_VALUE)
         );
 
         loginPanel.add(jPanel2, java.awt.BorderLayout.LINE_START);
@@ -394,7 +406,7 @@ public class DogView extends javax.swing.JFrame {
         dashboardPanel.setLayout(dashboardPanelLayout);
         dashboardPanelLayout.setHorizontalGroup(
             dashboardPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 1000, Short.MAX_VALUE)
+            .addGap(0, 1002, Short.MAX_VALUE)
         );
         dashboardPanelLayout.setVerticalGroup(
             dashboardPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -407,6 +419,7 @@ public class DogView extends javax.swing.JFrame {
 
         tablePanel.setBackground(new java.awt.Color(220, 220, 220));
         tablePanel.setPreferredSize(new java.awt.Dimension(800, 640));
+        tablePanel.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
         dogTable.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
@@ -427,7 +440,7 @@ public class DogView extends javax.swing.JFrame {
                 return canEdit [columnIndex];
             }
         });
-        jScrollPane2.setViewportView(dogTable);
+        dogScrollPane.setViewportView(dogTable);
         if (dogTable.getColumnModel().getColumnCount() > 0) {
             dogTable.getColumnModel().getColumn(0).setMinWidth(40);
             dogTable.getColumnModel().getColumn(0).setPreferredWidth(60);
@@ -436,6 +449,8 @@ public class DogView extends javax.swing.JFrame {
             dogTable.getColumnModel().getColumn(3).setPreferredWidth(60);
             dogTable.getColumnModel().getColumn(3).setMaxWidth(60);
         }
+
+        tablePanel.add(dogScrollPane, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 40, 838, 347));
 
         refreshTableButton.setBackground(new java.awt.Color(44, 62, 80));
         refreshTableButton.setFont(new java.awt.Font("Franklin Gothic Book", 0, 14)); // NOI18N
@@ -446,6 +461,7 @@ public class DogView extends javax.swing.JFrame {
                 refreshTableButtonActionPerformed(evt);
             }
         });
+        tablePanel.add(refreshTableButton, new org.netbeans.lib.awtextra.AbsoluteConstraints(850, 100, 140, 40));
 
         deleteFromListButton.setBackground(new java.awt.Color(44, 62, 80));
         deleteFromListButton.setFont(new java.awt.Font("Franklin Gothic Book", 0, 14)); // NOI18N
@@ -456,42 +472,65 @@ public class DogView extends javax.swing.JFrame {
                 deleteFromListButtonActionPerformed(evt);
             }
         });
+        tablePanel.add(deleteFromListButton, new org.netbeans.lib.awtextra.AbsoluteConstraints(850, 40, 140, 40));
 
-        searchField.setText("jTextField1");
-
-        javax.swing.GroupLayout tablePanelLayout = new javax.swing.GroupLayout(tablePanel);
-        tablePanel.setLayout(tablePanelLayout);
-        tablePanelLayout.setHorizontalGroup(
-            tablePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(tablePanelLayout.createSequentialGroup()
-                .addComponent(jScrollPane2)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(tablePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(deleteFromListButton, javax.swing.GroupLayout.DEFAULT_SIZE, 138, Short.MAX_VALUE)
-                    .addComponent(refreshTableButton, javax.swing.GroupLayout.DEFAULT_SIZE, 138, Short.MAX_VALUE))
-                .addContainerGap())
-            .addGroup(tablePanelLayout.createSequentialGroup()
-                .addGap(88, 88, 88)
-                .addComponent(searchField, javax.swing.GroupLayout.PREFERRED_SIZE, 258, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-        );
-        tablePanelLayout.setVerticalGroup(
-            tablePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, tablePanelLayout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(searchField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 28, Short.MAX_VALUE)
-                .addGroup(tablePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(tablePanelLayout.createSequentialGroup()
-                        .addComponent(deleteFromListButton, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(refreshTableButton, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 389, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap())
-        );
-
+        searchField.setBackground(new java.awt.Color(210, 210, 210));
+        searchField.setForeground(new java.awt.Color(0, 0, 0));
+        searchField.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusGained(java.awt.event.FocusEvent evt) {
+                searchFieldFocusGained(evt);
+            }
+            public void focusLost(java.awt.event.FocusEvent evt) {
+                searchFieldFocusLost(evt);
+            }
+        });
+        searchField.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                searchFieldActionPerformed(evt);
+            }
+        });
+        tablePanel.add(searchField, new org.netbeans.lib.awtextra.AbsoluteConstraints(6, 6, 258, -1));
         searchField.getAccessibleContext().setAccessibleName("");
         searchField.getAccessibleContext().setAccessibleDescription("");
+
+        searchTypeCombo.setBackground(new java.awt.Color(44, 62, 80));
+        searchTypeCombo.setFont(new java.awt.Font("Franklin Gothic Book", 0, 12)); // NOI18N
+        searchTypeCombo.setForeground(new java.awt.Color(250, 250, 250));
+        searchTypeCombo.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "ID", "Name" }));
+        searchTypeCombo.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                searchTypeComboActionPerformed(evt);
+            }
+        });
+        tablePanel.add(searchTypeCombo, new org.netbeans.lib.awtextra.AbsoluteConstraints(348, 6, -1, 25));
+
+        searchDogButton.setBackground(new java.awt.Color(44, 62, 80));
+        searchDogButton.setFont(new java.awt.Font("Franklin Gothic Book", 0, 12)); // NOI18N
+        searchDogButton.setForeground(new java.awt.Color(255, 255, 255));
+        searchDogButton.setText("Search");
+        tablePanel.add(searchDogButton, new org.netbeans.lib.awtextra.AbsoluteConstraints(270, 6, -1, 25));
+
+        sortOptionCombo.setBackground(new java.awt.Color(44, 62, 80));
+        sortOptionCombo.setFont(new java.awt.Font("Franklin Gothic Book", 0, 14)); // NOI18N
+        sortOptionCombo.setForeground(new java.awt.Color(255, 255, 255));
+        sortOptionCombo.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "ID", "Name", "Age", "Weight" }));
+        tablePanel.add(sortOptionCombo, new org.netbeans.lib.awtextra.AbsoluteConstraints(850, 170, 140, -1));
+
+        sortLabel.setFont(new java.awt.Font("Franklin Gothic Book", 0, 14)); // NOI18N
+        sortLabel.setForeground(new java.awt.Color(0, 0, 0));
+        sortLabel.setText("Sort by");
+        tablePanel.add(sortLabel, new org.netbeans.lib.awtextra.AbsoluteConstraints(850, 150, 50, -1));
+
+        sortButton.setBackground(new java.awt.Color(44, 62, 80));
+        sortButton.setFont(new java.awt.Font("Franklin Gothic Book", 0, 14)); // NOI18N
+        sortButton.setForeground(new java.awt.Color(255, 255, 255));
+        sortButton.setText("Sort by " + sortOptionCombo.getSelectedItem());
+        sortButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                sortButtonActionPerformed(evt);
+            }
+        });
+        tablePanel.add(sortButton, new org.netbeans.lib.awtextra.AbsoluteConstraints(850, 215, 140, 40));
 
         formDetailsPanel.setBackground(new java.awt.Color(236, 240, 241));
         formDetailsPanel.setBorder(javax.swing.BorderFactory.createTitledBorder(new javax.swing.border.LineBorder(new java.awt.Color(153, 153, 153), 1, true), "Dog Information", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Franklin Gothic Medium Cond", 1, 24), new java.awt.Color(51, 51, 51))); // NOI18N
@@ -500,8 +539,8 @@ public class DogView extends javax.swing.JFrame {
 
         dogIdLabel.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
         dogIdLabel.setForeground(new java.awt.Color(0, 0, 0));
-        dogIdLabel.setText("ID:");
-        formDetailsPanel.add(dogIdLabel, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 55, 71, -1));
+        dogIdLabel.setText("ID");
+        formDetailsPanel.add(dogIdLabel, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 70, 71, -1));
 
         idErrorPanel.setBackground(new java.awt.Color(236, 240, 241));
         idErrorPanel.setLayout(new java.awt.BorderLayout());
@@ -521,12 +560,12 @@ public class DogView extends javax.swing.JFrame {
         });
         idErrorPanel.add(dogIdField, java.awt.BorderLayout.PAGE_END);
 
-        formDetailsPanel.add(idErrorPanel, new org.netbeans.lib.awtextra.AbsoluteConstraints(115, 40, 220, 40));
+        formDetailsPanel.add(idErrorPanel, new org.netbeans.lib.awtextra.AbsoluteConstraints(90, 50, 220, 40));
 
         dogNameLabel.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
         dogNameLabel.setForeground(new java.awt.Color(0, 0, 0));
-        dogNameLabel.setText("Name:");
-        formDetailsPanel.add(dogNameLabel, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 100, 71, -1));
+        dogNameLabel.setText("Name");
+        formDetailsPanel.add(dogNameLabel, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 110, 71, -1));
 
         nameErrorPanel.setBackground(new java.awt.Color(236, 240, 241));
         nameErrorPanel.setLayout(new java.awt.BorderLayout());
@@ -546,12 +585,12 @@ public class DogView extends javax.swing.JFrame {
         });
         nameErrorPanel.add(dogNameField, java.awt.BorderLayout.PAGE_END);
 
-        formDetailsPanel.add(nameErrorPanel, new org.netbeans.lib.awtextra.AbsoluteConstraints(115, 85, 220, 40));
+        formDetailsPanel.add(nameErrorPanel, new org.netbeans.lib.awtextra.AbsoluteConstraints(90, 95, 220, 40));
 
         dogBreedLabel.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
         dogBreedLabel.setForeground(new java.awt.Color(0, 0, 0));
-        dogBreedLabel.setText("Breed:");
-        formDetailsPanel.add(dogBreedLabel, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 145, 71, -1));
+        dogBreedLabel.setText("Breed");
+        formDetailsPanel.add(dogBreedLabel, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 150, 71, -1));
 
         breedErrorPanel.setBackground(new java.awt.Color(236, 240, 241));
         breedErrorPanel.setLayout(new java.awt.BorderLayout());
@@ -566,12 +605,12 @@ public class DogView extends javax.swing.JFrame {
         dogBreedField.setBorder(new javax.swing.border.LineBorder(new java.awt.Color(102, 102, 102), 2, true));
         breedErrorPanel.add(dogBreedField, java.awt.BorderLayout.PAGE_END);
 
-        formDetailsPanel.add(breedErrorPanel, new org.netbeans.lib.awtextra.AbsoluteConstraints(115, 130, 220, 40));
+        formDetailsPanel.add(breedErrorPanel, new org.netbeans.lib.awtextra.AbsoluteConstraints(90, 140, 220, 40));
 
         dogAgeLabel.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
         dogAgeLabel.setForeground(new java.awt.Color(0, 0, 0));
         dogAgeLabel.setText("Age");
-        formDetailsPanel.add(dogAgeLabel, new org.netbeans.lib.awtextra.AbsoluteConstraints(370, 55, 71, -1));
+        formDetailsPanel.add(dogAgeLabel, new org.netbeans.lib.awtextra.AbsoluteConstraints(350, 70, 71, -1));
 
         ageErrorPanel.setBackground(new java.awt.Color(236, 240, 241));
         ageErrorPanel.setLayout(new java.awt.BorderLayout());
@@ -583,14 +622,19 @@ public class DogView extends javax.swing.JFrame {
         dogAgeField.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
         dogAgeField.setForeground(new java.awt.Color(44, 62, 80));
         dogAgeField.setBorder(new javax.swing.border.LineBorder(new java.awt.Color(102, 102, 102), 2, true));
+        dogAgeField.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                dogAgeFieldActionPerformed(evt);
+            }
+        });
         ageErrorPanel.add(dogAgeField, java.awt.BorderLayout.PAGE_END);
 
-        formDetailsPanel.add(ageErrorPanel, new org.netbeans.lib.awtextra.AbsoluteConstraints(460, 40, 220, 40));
+        formDetailsPanel.add(ageErrorPanel, new org.netbeans.lib.awtextra.AbsoluteConstraints(440, 50, 220, 40));
 
         dogWeightLabel.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
         dogWeightLabel.setForeground(new java.awt.Color(0, 0, 0));
         dogWeightLabel.setText("Weight (kg)");
-        formDetailsPanel.add(dogWeightLabel, new org.netbeans.lib.awtextra.AbsoluteConstraints(370, 100, 80, -1));
+        formDetailsPanel.add(dogWeightLabel, new org.netbeans.lib.awtextra.AbsoluteConstraints(350, 110, 80, -1));
 
         weightErrorPanel.setBackground(new java.awt.Color(236, 240, 241));
         weightErrorPanel.setLayout(new java.awt.BorderLayout());
@@ -604,12 +648,12 @@ public class DogView extends javax.swing.JFrame {
         dogWeightField.setBorder(new javax.swing.border.LineBorder(new java.awt.Color(102, 102, 102), 2, true));
         weightErrorPanel.add(dogWeightField, java.awt.BorderLayout.PAGE_END);
 
-        formDetailsPanel.add(weightErrorPanel, new org.netbeans.lib.awtextra.AbsoluteConstraints(460, 85, 220, 40));
+        formDetailsPanel.add(weightErrorPanel, new org.netbeans.lib.awtextra.AbsoluteConstraints(440, 95, 220, 40));
 
         dogGenderLabel.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
         dogGenderLabel.setForeground(new java.awt.Color(0, 0, 0));
         dogGenderLabel.setText("Gender");
-        formDetailsPanel.add(dogGenderLabel, new org.netbeans.lib.awtextra.AbsoluteConstraints(372, 145, 71, -1));
+        formDetailsPanel.add(dogGenderLabel, new org.netbeans.lib.awtextra.AbsoluteConstraints(350, 150, 71, -1));
 
         genderPanel.setBackground(new java.awt.Color(236, 240, 241));
 
@@ -641,12 +685,12 @@ public class DogView extends javax.swing.JFrame {
                     .addComponent(femaleRadioButton)))
         );
 
-        formDetailsPanel.add(genderPanel, new org.netbeans.lib.awtextra.AbsoluteConstraints(460, 140, 220, -1));
+        formDetailsPanel.add(genderPanel, new org.netbeans.lib.awtextra.AbsoluteConstraints(440, 150, 220, -1));
 
         dogColorLabel.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
         dogColorLabel.setForeground(new java.awt.Color(0, 0, 0));
         dogColorLabel.setText("Color");
-        formDetailsPanel.add(dogColorLabel, new org.netbeans.lib.awtextra.AbsoluteConstraints(699, 55, 71, -1));
+        formDetailsPanel.add(dogColorLabel, new org.netbeans.lib.awtextra.AbsoluteConstraints(680, 70, 71, -1));
 
         colorErrorPanel.setBackground(new java.awt.Color(236, 240, 241));
         colorErrorPanel.setLayout(new java.awt.BorderLayout());
@@ -660,17 +704,17 @@ public class DogView extends javax.swing.JFrame {
         colorErrorLabel.setForeground(new java.awt.Color(255, 51, 51));
         colorErrorPanel.add(colorErrorLabel, java.awt.BorderLayout.PAGE_START);
 
-        formDetailsPanel.add(colorErrorPanel, new org.netbeans.lib.awtextra.AbsoluteConstraints(775, 40, 210, 40));
+        formDetailsPanel.add(colorErrorPanel, new org.netbeans.lib.awtextra.AbsoluteConstraints(760, 50, 210, 40));
 
         dogAdoptionStatusLabel.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
         dogAdoptionStatusLabel.setForeground(new java.awt.Color(0, 0, 0));
         dogAdoptionStatusLabel.setText("Status");
-        formDetailsPanel.add(dogAdoptionStatusLabel, new org.netbeans.lib.awtextra.AbsoluteConstraints(699, 96, 71, -1));
+        formDetailsPanel.add(dogAdoptionStatusLabel, new org.netbeans.lib.awtextra.AbsoluteConstraints(680, 110, 71, -1));
 
         adoptionStatusComboBox.setBackground(new java.awt.Color(204, 204, 204));
         adoptionStatusComboBox.setForeground(new java.awt.Color(44, 62, 80));
         adoptionStatusComboBox.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Adopted", "Unadopted" }));
-        formDetailsPanel.add(adoptionStatusComboBox, new org.netbeans.lib.awtextra.AbsoluteConstraints(776, 96, 116, -1));
+        formDetailsPanel.add(adoptionStatusComboBox, new org.netbeans.lib.awtextra.AbsoluteConstraints(760, 110, 116, -1));
 
         updateDogButton.setBackground(new java.awt.Color(44, 62, 80));
         updateDogButton.setFont(new java.awt.Font("Franklin Gothic Book", 0, 14)); // NOI18N
@@ -683,7 +727,7 @@ public class DogView extends javax.swing.JFrame {
                 updateDogButtonActionPerformed(evt);
             }
         });
-        formDetailsPanel.add(updateDogButton, new org.netbeans.lib.awtextra.AbsoluteConstraints(379, 209, -1, -1));
+        formDetailsPanel.add(updateDogButton, new org.netbeans.lib.awtextra.AbsoluteConstraints(380, 260, -1, -1));
 
         addDogButton.setBackground(new java.awt.Color(44, 62, 80));
         addDogButton.setFont(new java.awt.Font("Franklin Gothic Book", 0, 14)); // NOI18N
@@ -695,7 +739,7 @@ public class DogView extends javax.swing.JFrame {
                 addDogButtonActionPerformed(evt);
             }
         });
-        formDetailsPanel.add(addDogButton, new org.netbeans.lib.awtextra.AbsoluteConstraints(27, 209, -1, -1));
+        formDetailsPanel.add(addDogButton, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 260, -1, -1));
 
         clearFieldsButton.setBackground(new java.awt.Color(44, 62, 80));
         clearFieldsButton.setFont(new java.awt.Font("Franklin Gothic Book", 0, 14)); // NOI18N
@@ -707,7 +751,7 @@ public class DogView extends javax.swing.JFrame {
                 clearFieldsButtonActionPerformed(evt);
             }
         });
-        formDetailsPanel.add(clearFieldsButton, new org.netbeans.lib.awtextra.AbsoluteConstraints(203, 209, -1, -1));
+        formDetailsPanel.add(clearFieldsButton, new org.netbeans.lib.awtextra.AbsoluteConstraints(200, 260, -1, -1));
 
         saveButton.setBackground(new java.awt.Color(44, 62, 80));
         saveButton.setFont(new java.awt.Font("Franklin Gothic Book", 0, 14)); // NOI18N
@@ -720,7 +764,7 @@ public class DogView extends javax.swing.JFrame {
                 saveButtonActionPerformed(evt);
             }
         });
-        formDetailsPanel.add(saveButton, new org.netbeans.lib.awtextra.AbsoluteConstraints(555, 208, -1, -1));
+        formDetailsPanel.add(saveButton, new org.netbeans.lib.awtextra.AbsoluteConstraints(560, 260, -1, -1));
 
         cancelButton.setBackground(new java.awt.Color(44, 62, 80));
         cancelButton.setFont(new java.awt.Font("Franklin Gothic Book", 0, 14)); // NOI18N
@@ -733,7 +777,39 @@ public class DogView extends javax.swing.JFrame {
                 cancelButtonActionPerformed(evt);
             }
         });
-        formDetailsPanel.add(cancelButton, new org.netbeans.lib.awtextra.AbsoluteConstraints(726, 208, -1, -1));
+        formDetailsPanel.add(cancelButton, new org.netbeans.lib.awtextra.AbsoluteConstraints(730, 260, -1, -1));
+
+        photoFormLabel.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        photoFormLabel.setForeground(new java.awt.Color(0, 0, 0));
+        photoFormLabel.setText("Photo");
+        formDetailsPanel.add(photoFormLabel, new org.netbeans.lib.awtextra.AbsoluteConstraints(680, 150, 71, -1));
+
+        uploadPhotoButton.setText("Upload file");
+        uploadPhotoButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                uploadPhotoButtonActionPerformed(evt);
+            }
+        });
+        formDetailsPanel.add(uploadPhotoButton, new org.netbeans.lib.awtextra.AbsoluteConstraints(760, 150, -1, -1));
+
+        viewPhotoButton.setText("View photo");
+        viewPhotoButton.setVisible(false);
+        viewPhotoButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                viewPhotoButtonActionPerformed(evt);
+            }
+        });
+        formDetailsPanel.add(viewPhotoButton, new org.netbeans.lib.awtextra.AbsoluteConstraints(870, 150, -1, -1));
+
+        removePhotoButton.setText("Remove");
+        removePhotoButton.setPreferredSize(new java.awt.Dimension(89, 23));
+        removePhotoButton.setVisible(false);
+        removePhotoButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                removePhotoButtonActionPerformed(evt);
+            }
+        });
+        formDetailsPanel.add(removePhotoButton, new org.netbeans.lib.awtextra.AbsoluteConstraints(760, 190, 90, -1));
 
         javax.swing.GroupLayout dogsPanelLayout = new javax.swing.GroupLayout(dogsPanel);
         dogsPanel.setLayout(dogsPanelLayout);
@@ -742,7 +818,7 @@ public class DogView extends javax.swing.JFrame {
             .addGroup(dogsPanelLayout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(dogsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(tablePanel, javax.swing.GroupLayout.DEFAULT_SIZE, 988, Short.MAX_VALUE)
+                    .addComponent(tablePanel, javax.swing.GroupLayout.DEFAULT_SIZE, 990, Short.MAX_VALUE)
                     .addComponent(formDetailsPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap())
         );
@@ -750,9 +826,9 @@ public class DogView extends javax.swing.JFrame {
             dogsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(dogsPanelLayout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(tablePanel, javax.swing.GroupLayout.PREFERRED_SIZE, 451, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(tablePanel, javax.swing.GroupLayout.PREFERRED_SIZE, 394, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(formDetailsPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(formDetailsPanel, javax.swing.GroupLayout.DEFAULT_SIZE, 318, Short.MAX_VALUE)
                 .addContainerGap())
         );
 
@@ -764,7 +840,7 @@ public class DogView extends javax.swing.JFrame {
         usersManagementPanel.setLayout(usersManagementPanelLayout);
         usersManagementPanelLayout.setHorizontalGroup(
             usersManagementPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 1000, Short.MAX_VALUE)
+            .addGap(0, 1002, Short.MAX_VALUE)
         );
         usersManagementPanelLayout.setVerticalGroup(
             usersManagementPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -780,7 +856,7 @@ public class DogView extends javax.swing.JFrame {
         adoptionsPanel.setLayout(adoptionsPanelLayout);
         adoptionsPanelLayout.setHorizontalGroup(
             adoptionsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 1000, Short.MAX_VALUE)
+            .addGap(0, 1002, Short.MAX_VALUE)
         );
         adoptionsPanelLayout.setVerticalGroup(
             adoptionsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -795,7 +871,7 @@ public class DogView extends javax.swing.JFrame {
         historyPanel.setLayout(historyPanelLayout);
         historyPanelLayout.setHorizontalGroup(
             historyPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 1000, Short.MAX_VALUE)
+            .addGap(0, 1002, Short.MAX_VALUE)
         );
         historyPanelLayout.setVerticalGroup(
             historyPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -999,8 +1075,16 @@ public class DogView extends javax.swing.JFrame {
             String gender = femaleRadioButton.isSelected() ? "Female" : "Male";
             int age = Integer.parseInt(dogAgeField.getText().trim());
             float weight = Float.parseFloat(dogWeightField.getText().trim());
+            String photoPath = (selectedPhotoPath != null)
+                    ? selectedPhotoPath
+                    : "src\\assets\\dogImages\\default_dog.jpg";
+            Dog newDog = new Dog(id, name, breed, adoptionStatus, age, gender, weight, color, photoPath);
 
-            Dog newDog = new Dog(id, name, breed, adoptionStatus, age, gender, weight, color);
+            //reset buttons and photo path
+            selectedPhotoPath = null;
+            viewPhotoButton.setVisible(false);
+            removePhotoButton.setVisible(false);
+            uploadPhotoButton.setText("Upload Photo");
 
             if (!controller.addDog(newDog)) {
                 JOptionPane.showMessageDialog(this,
@@ -1249,7 +1333,7 @@ public class DogView extends javax.swing.JFrame {
             String adoptionStatus = (String) adoptionStatusComboBox.getSelectedItem();
 
             // Create updated dog object
-            Dog updatedDog = new Dog(editId, name, breed, adoptionStatus, age, gender, weight, color);
+            Dog updatedDog = new Dog(editId, name, breed, adoptionStatus, age, gender, weight, color, "");
 
             // Call controller's updateDog method
             boolean success = controller.updateDog(editId, updatedDog);
@@ -1286,6 +1370,83 @@ public class DogView extends javax.swing.JFrame {
     private void cancelButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cancelButtonActionPerformed
         resetFormAfterSave();
     }//GEN-LAST:event_cancelButtonActionPerformed
+
+    private void dogAgeFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_dogAgeFieldActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_dogAgeFieldActionPerformed
+
+    private void uploadPhotoButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_uploadPhotoButtonActionPerformed
+        JFileChooser fileChooser = new JFileChooser();
+        fileChooser.setDialogTitle("Select Dog Photo");
+        fileChooser.setFileFilter(new javax.swing.filechooser.FileNameExtensionFilter(
+                "Images", "jpg", "jpeg", "png"));
+
+        if (fileChooser.showOpenDialog(this) == JFileChooser.APPROVE_OPTION) {
+            selectedPhotoPath = fileChooser.getSelectedFile().getAbsolutePath();
+            viewPhotoButton.setVisible(true);
+            removePhotoButton.setVisible(true);
+
+            uploadPhotoButton.setText("Choose another");
+
+        }
+    }//GEN-LAST:event_uploadPhotoButtonActionPerformed
+
+    private void viewPhotoButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_viewPhotoButtonActionPerformed
+        if (selectedPhotoPath == null) {
+            return;
+        }
+
+        ImageIcon photo = new ImageIcon(selectedPhotoPath);
+        JOptionPane.showMessageDialog(this,
+                new JLabel(photo),
+                "Dog Photo",
+                JOptionPane.PLAIN_MESSAGE);
+    }//GEN-LAST:event_viewPhotoButtonActionPerformed
+
+    private void removePhotoButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_removePhotoButtonActionPerformed
+        selectedPhotoPath = null;
+        viewPhotoButton.setVisible(false);
+        removePhotoButton.setVisible(false);
+        uploadPhotoButton.setText("Upload Photo");
+        uploadPhotoButton.setBackground(null); // Reset color
+    }//GEN-LAST:event_removePhotoButtonActionPerformed
+
+    private void searchFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_searchFieldActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_searchFieldActionPerformed
+
+    private void searchFieldFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_searchFieldFocusLost
+
+    }//GEN-LAST:event_searchFieldFocusLost
+
+    private void searchTypeComboActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_searchTypeComboActionPerformed
+        String selected = (String) searchTypeCombo.getSelectedItem();
+        if (selected.equals("ID")) {
+            searchField.setText("Enter ID number");
+        } else if (selected.equals("Name")) {
+            searchField.setText("Enter dog name");
+        }
+    }//GEN-LAST:event_searchTypeComboActionPerformed
+
+    private void searchFieldFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_searchFieldFocusGained
+        searchField.setText("");
+    }//GEN-LAST:event_searchFieldFocusGained
+
+    private void sortButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_sortButtonActionPerformed
+        if (sortOptionCombo.getSelectedItem().equals("ID")) {
+            controller.sortById();
+            controller.loadDataToTable(dogTable);
+        } else if (sortOptionCombo.getSelectedItem().equals("Age")) {
+            controller.sortByAge();
+            controller.loadDataToTable(dogTable);
+        } else if (sortOptionCombo.getSelectedItem().equals("Name")) {
+            controller.sortByAge();
+            controller.loadDataToTable(dogTable);
+        } else if (sortOptionCombo.getSelectedItem().equals("Weight")) {
+            controller.sortByAge();
+            controller.loadDataToTable(dogTable);
+        }
+    }//GEN-LAST:event_sortButtonActionPerformed
 
     private void errorFieldFocus(JTextField field, JLabel errorLabel, String message) {
         field.setBorder(BorderFactory.createLineBorder(Color.RED, 2));
@@ -1508,6 +1669,7 @@ public class DogView extends javax.swing.JFrame {
     private javax.swing.JLabel dogIdLabel;
     private javax.swing.JTextField dogNameField;
     private javax.swing.JLabel dogNameLabel;
+    private javax.swing.JScrollPane dogScrollPane;
     private javax.swing.JTable dogTable;
     private javax.swing.JTextField dogWeightField;
     private javax.swing.JLabel dogWeightLabel;
@@ -1526,7 +1688,6 @@ public class DogView extends javax.swing.JFrame {
     private javax.swing.JPanel jPanel4;
     private javax.swing.JPanel jPanel5;
     private javax.swing.JPanel jPanel6;
-    private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JPanel loginDetailsPanel;
     private javax.swing.JPanel loginPanel;
     private javax.swing.JLabel logoLabel;
@@ -1536,15 +1697,24 @@ public class DogView extends javax.swing.JFrame {
     private javax.swing.JLabel nameErrorLabel;
     private javax.swing.JPanel nameErrorPanel;
     private javax.swing.JPanel navigationPanel;
+    private javax.swing.JLabel photoFormLabel;
     private javax.swing.JButton refreshTableButton;
+    private javax.swing.JButton removePhotoButton;
     private javax.swing.JButton saveButton;
+    private javax.swing.JButton searchDogButton;
     private javax.swing.JTextField searchField;
+    private javax.swing.JComboBox<String> searchTypeCombo;
+    private javax.swing.JButton sortButton;
+    private javax.swing.JLabel sortLabel;
+    private javax.swing.JComboBox<String> sortOptionCombo;
     private javax.swing.JPanel tablePanel;
     private javax.swing.JButton updateDogButton;
+    private javax.swing.JButton uploadPhotoButton;
     private javax.swing.JButton userButton;
     private javax.swing.JPanel userPanel;
     private javax.swing.JPanel usersManagementPanel;
     private javax.swing.JButton usersPanelButton;
+    private javax.swing.JButton viewPhotoButton;
     private javax.swing.JLabel weightErrorLabel;
     private javax.swing.JPanel weightErrorPanel;
     // End of variables declaration//GEN-END:variables
