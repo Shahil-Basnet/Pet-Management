@@ -37,7 +37,7 @@ import javax.swing.table.DefaultTableModel;
 public class DogView extends javax.swing.JFrame {
 
     private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(DogView.class.getName());
-    private CardLayout cardLayout, cardLayoutAdmin;
+    private CardLayout cardLayout, cardLayoutAdmin, cardLayoutUser;
     private DogController controller;
     private UserController userController;
 
@@ -59,6 +59,7 @@ public class DogView extends javax.swing.JFrame {
         cardLayout = (CardLayout) mainPanel.getLayout();
         cardLayout.show(mainPanel, "loginCard");
         cardLayoutAdmin = (CardLayout) contentPanel.getLayout();
+        cardLayoutUser = (CardLayout) userContentPanel.getLayout();
 
         controller.loadDataToTable(dogTable);
         search = new Search();
@@ -76,7 +77,16 @@ public class DogView extends javax.swing.JFrame {
         genderButtonGroup = new javax.swing.ButtonGroup();
         mainPanel = new javax.swing.JPanel();
         userPanel = new javax.swing.JPanel();
+        userHeaderPanel = new javax.swing.JPanel();
+        userNavigationPanel = new javax.swing.JPanel();
+        homeButton = new javax.swing.JButton();
+        dogsButton = new javax.swing.JButton();
+        navigationAdoptButton = new javax.swing.JButton();
         logoutButtonUser = new javax.swing.JButton();
+        userContentPanel = new javax.swing.JPanel();
+        userHomePanel = new javax.swing.JPanel();
+        userDogsPanel = new javax.swing.JPanel();
+        userAdoptPanel = new javax.swing.JPanel();
         loginPanel = new javax.swing.JPanel();
         loginDetailsPanel = new javax.swing.JPanel();
         ImageIcon logoImg = new ImageIcon("src\\assets\\icons\\ps_logo_horizontal.png");
@@ -181,7 +191,89 @@ public class DogView extends javax.swing.JFrame {
         mainPanel.setPreferredSize(new java.awt.Dimension(1200, 800));
         mainPanel.setLayout(new java.awt.CardLayout());
 
-        userPanel.setBackground(new java.awt.Color(255, 255, 102));
+        userPanel.setBackground(new java.awt.Color(250, 250, 255));
+
+        userHeaderPanel.setBackground(new java.awt.Color(250, 250, 255));
+        userHeaderPanel.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
+
+        userNavigationPanel.setBackground(new java.awt.Color(240, 240, 240));
+        userNavigationPanel.setBorder(javax.swing.BorderFactory.createMatteBorder(0, 0, 2, 0, new java.awt.Color(222, 158, 54)));
+        userNavigationPanel.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
+
+        homeButton.setBackground(new java.awt.Color(240, 240, 240));
+        homeButton.setFont(new java.awt.Font("Franklin Gothic Demi Cond", 0, 14)); // NOI18N
+        homeButton.setText("Home");
+        homeButton.setBorder(javax.swing.BorderFactory.createMatteBorder(0, 0, 3, 0, new java.awt.Color(222, 158, 54)));
+        homeButton.setContentAreaFilled(false);
+        homeButton.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        homeButton.setDefaultCapable(false);
+        homeButton.setFocusPainted(false);
+        homeButton.setFocusable(false);
+        homeButton.setRequestFocusEnabled(false);
+        homeButton.setRolloverEnabled(false);
+        homeButton.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                homeButtonMouseEntered(evt);
+            }
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+                homeButtonMouseExited(evt);
+            }
+        });
+        homeButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                homeButtonActionPerformed(evt);
+            }
+        });
+        userNavigationPanel.add(homeButton, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 10, 130, 30));
+
+        dogsButton.setBackground(new java.awt.Color(240, 240, 240));
+        dogsButton.setFont(new java.awt.Font("Franklin Gothic Demi Cond", 0, 14)); // NOI18N
+        dogsButton.setText("Dogs");
+        dogsButton.setBorder(null);
+        dogsButton.setContentAreaFilled(false);
+        dogsButton.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        dogsButton.setDefaultCapable(false);
+        dogsButton.setFocusPainted(false);
+        dogsButton.setFocusable(false);
+        dogsButton.setRequestFocusEnabled(false);
+        dogsButton.setRolloverEnabled(false);
+        dogsButton.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                dogsButtonMouseEntered(evt);
+            }
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+                dogsButtonMouseExited(evt);
+            }
+        });
+        dogsButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                dogsButtonActionPerformed(evt);
+            }
+        });
+        userNavigationPanel.add(dogsButton, new org.netbeans.lib.awtextra.AbsoluteConstraints(190, 10, 130, 30));
+
+        navigationAdoptButton.setBackground(new java.awt.Color(240, 240, 240));
+        navigationAdoptButton.setFont(new java.awt.Font("Franklin Gothic Demi Cond", 0, 14)); // NOI18N
+        navigationAdoptButton.setText("Adopt");
+        navigationAdoptButton.setBorder(null);
+        navigationAdoptButton.setContentAreaFilled(false);
+        navigationAdoptButton.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        navigationAdoptButton.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                navigationAdoptButtonMouseEntered(evt);
+            }
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+                navigationAdoptButtonMouseExited(evt);
+            }
+        });
+        navigationAdoptButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                navigationAdoptButtonActionPerformed(evt);
+            }
+        });
+        userNavigationPanel.add(navigationAdoptButton, new org.netbeans.lib.awtextra.AbsoluteConstraints(350, 10, 130, 30));
+
+        userHeaderPanel.add(userNavigationPanel, new org.netbeans.lib.awtextra.AbsoluteConstraints(390, 20, 490, 50));
 
         logoutButtonUser.setText("Log out");
         logoutButtonUser.addActionListener(new java.awt.event.ActionListener() {
@@ -189,22 +281,73 @@ public class DogView extends javax.swing.JFrame {
                 logoutButtonUserActionPerformed(evt);
             }
         });
+        userHeaderPanel.add(logoutButtonUser, new org.netbeans.lib.awtextra.AbsoluteConstraints(1090, 30, -1, -1));
+
+        userContentPanel.setLayout(new java.awt.CardLayout());
+
+        userHomePanel.setBackground(new java.awt.Color(51, 255, 204));
+
+        javax.swing.GroupLayout userHomePanelLayout = new javax.swing.GroupLayout(userHomePanel);
+        userHomePanel.setLayout(userHomePanelLayout);
+        userHomePanelLayout.setHorizontalGroup(
+            userHomePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 1173, Short.MAX_VALUE)
+        );
+        userHomePanelLayout.setVerticalGroup(
+            userHomePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 702, Short.MAX_VALUE)
+        );
+
+        userContentPanel.add(userHomePanel, "userHomeCard");
+
+        userDogsPanel.setBackground(new java.awt.Color(51, 0, 102));
+
+        javax.swing.GroupLayout userDogsPanelLayout = new javax.swing.GroupLayout(userDogsPanel);
+        userDogsPanel.setLayout(userDogsPanelLayout);
+        userDogsPanelLayout.setHorizontalGroup(
+            userDogsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 1173, Short.MAX_VALUE)
+        );
+        userDogsPanelLayout.setVerticalGroup(
+            userDogsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 702, Short.MAX_VALUE)
+        );
+
+        userContentPanel.add(userDogsPanel, "userDogsCard");
+
+        userAdoptPanel.setBackground(new java.awt.Color(0, 102, 102));
+
+        javax.swing.GroupLayout userAdoptPanelLayout = new javax.swing.GroupLayout(userAdoptPanel);
+        userAdoptPanel.setLayout(userAdoptPanelLayout);
+        userAdoptPanelLayout.setHorizontalGroup(
+            userAdoptPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 1173, Short.MAX_VALUE)
+        );
+        userAdoptPanelLayout.setVerticalGroup(
+            userAdoptPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 702, Short.MAX_VALUE)
+        );
+
+        userContentPanel.add(userAdoptPanel, "userAdoptCard");
 
         javax.swing.GroupLayout userPanelLayout = new javax.swing.GroupLayout(userPanel);
         userPanel.setLayout(userPanelLayout);
         userPanelLayout.setHorizontalGroup(
             userPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, userPanelLayout.createSequentialGroup()
-                .addContainerGap(1099, Short.MAX_VALUE)
-                .addComponent(logoutButtonUser)
-                .addGap(29, 29, 29))
+            .addGroup(userPanelLayout.createSequentialGroup()
+                .addGroup(userPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(userPanelLayout.createSequentialGroup()
+                        .addContainerGap()
+                        .addComponent(userContentPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(userHeaderPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap())
         );
         userPanelLayout.setVerticalGroup(
             userPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(userPanelLayout.createSequentialGroup()
-                .addGap(18, 18, 18)
-                .addComponent(logoutButtonUser)
-                .addContainerGap(759, Short.MAX_VALUE))
+                .addComponent(userHeaderPanel, javax.swing.GroupLayout.PREFERRED_SIZE, 90, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(userContentPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         mainPanel.add(userPanel, "userCard");
@@ -1856,6 +1999,57 @@ public class DogView extends javax.swing.JFrame {
                 JOptionPane.INFORMATION_MESSAGE);
     }//GEN-LAST:event_forgotPasswordButtonMouseClicked
 
+    private void homeButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_homeButtonActionPerformed
+        cardLayoutUser.show(userContentPanel, "userHomeCard");
+        homeButton.setBorder(BorderFactory.createMatteBorder(0,0,3,0, new Color(222,158,54)));
+        dogsButton.setBorder(null);
+        navigationAdoptButton.setBorder(null);
+    }//GEN-LAST:event_homeButtonActionPerformed
+
+    private void dogsButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_dogsButtonActionPerformed
+        cardLayoutUser.show(userContentPanel, "userDogsCard");
+        dogsButton.setBorder(BorderFactory.createMatteBorder(0,0,3,0, new Color(222,158,54)));
+        homeButton.setBorder(null);
+        navigationAdoptButton.setBorder(null);
+    }//GEN-LAST:event_dogsButtonActionPerformed
+
+    private void navigationAdoptButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_navigationAdoptButtonActionPerformed
+        cardLayoutUser.show(userContentPanel, "userAdoptCard");
+        navigationAdoptButton.setBorder(BorderFactory.createMatteBorder(0,0,3,0, new Color(222,158,54)));
+        homeButton.setBorder(null);
+        dogsButton.setBorder(null);
+    }//GEN-LAST:event_navigationAdoptButtonActionPerformed
+
+    private void homeButtonMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_homeButtonMouseEntered
+        homeButton.setContentAreaFilled(true);
+        homeButton.setBackground(new Color(222, 158, 54));
+    }//GEN-LAST:event_homeButtonMouseEntered
+
+    private void homeButtonMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_homeButtonMouseExited
+        homeButton.setBackground(new Color(240, 240, 240));
+        homeButton.setContentAreaFilled(false);
+    }//GEN-LAST:event_homeButtonMouseExited
+
+    private void dogsButtonMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_dogsButtonMouseEntered
+        dogsButton.setContentAreaFilled(true);
+        dogsButton.setBackground(new Color(222, 158, 54));
+    }//GEN-LAST:event_dogsButtonMouseEntered
+
+    private void dogsButtonMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_dogsButtonMouseExited
+        dogsButton.setBackground(new Color(240, 240, 240));
+        dogsButton.setContentAreaFilled(false);
+    }//GEN-LAST:event_dogsButtonMouseExited
+
+    private void navigationAdoptButtonMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_navigationAdoptButtonMouseEntered
+        navigationAdoptButton.setContentAreaFilled(true);
+        navigationAdoptButton.setBackground(new Color(222, 158, 54));
+    }//GEN-LAST:event_navigationAdoptButtonMouseEntered
+
+    private void navigationAdoptButtonMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_navigationAdoptButtonMouseExited
+        navigationAdoptButton.setBackground(new Color(240, 240, 240));
+        navigationAdoptButton.setContentAreaFilled(false);
+    }//GEN-LAST:event_navigationAdoptButtonMouseExited
+
     private void errorFieldFocus(JTextField field, JLabel errorLabel, String message) {
         field.setBorder(BorderFactory.createLineBorder(Color.RED, 2));
         if (errorLabel != null) {
@@ -2094,6 +2288,7 @@ public class DogView extends javax.swing.JFrame {
     private javax.swing.JTable dogTable;
     private javax.swing.JTextField dogWeightField;
     private javax.swing.JLabel dogWeightLabel;
+    private javax.swing.JButton dogsButton;
     private javax.swing.JPanel dogsPanel;
     private javax.swing.JButton dogsPanelButton;
     private javax.swing.JRadioButton femaleRadioButton;
@@ -2104,6 +2299,7 @@ public class DogView extends javax.swing.JFrame {
     private javax.swing.JPanel headerPanel;
     private javax.swing.JPanel historyPanel;
     private javax.swing.JButton historyPanelButton;
+    private javax.swing.JButton homeButton;
     private javax.swing.JLabel idErrorLabel;
     private javax.swing.JPanel idErrorPanel;
     private javax.swing.JLabel instructionLabel;
@@ -2120,6 +2316,7 @@ public class DogView extends javax.swing.JFrame {
     private javax.swing.JRadioButton maleRadioButton;
     private javax.swing.JLabel nameErrorLabel;
     private javax.swing.JPanel nameErrorPanel;
+    private javax.swing.JButton navigationAdoptButton;
     private javax.swing.JPanel navigationPanel;
     private javax.swing.JLabel photoFormLabel;
     private javax.swing.JButton refreshTableButton;
@@ -2141,6 +2338,12 @@ public class DogView extends javax.swing.JFrame {
     private javax.swing.JButton undoDeleteButton;
     private javax.swing.JButton updateDogButton;
     private javax.swing.JButton uploadPhotoButton;
+    private javax.swing.JPanel userAdoptPanel;
+    private javax.swing.JPanel userContentPanel;
+    private javax.swing.JPanel userDogsPanel;
+    private javax.swing.JPanel userHeaderPanel;
+    private javax.swing.JPanel userHomePanel;
+    private javax.swing.JPanel userNavigationPanel;
     private javax.swing.JPanel userPanel;
     private javax.swing.JPanel usersManagementPanel;
     private javax.swing.JButton usersPanelButton;
