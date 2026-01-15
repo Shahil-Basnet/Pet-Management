@@ -4,12 +4,15 @@
  */
 package View;
 
+import Controller.ActivityLogger;
+import Controller.AdoptionController;
 import Model.Dog;
 import Controller.DogController;
 import Controller.PhotoHelper;
 import Controller.Search;
 import Model.User;
 import Controller.UserController;
+import Model.AdoptionApplication;
 import java.awt.CardLayout;
 import java.awt.Color;
 import java.util.LinkedList;
@@ -44,10 +47,13 @@ public class DogView extends javax.swing.JFrame {
     private CardLayout cardLayout, cardLayoutAdmin, cardLayoutUser;
     private DogController controller;
     private UserController userController;
+    private AdoptionController adoptionController;
+    private ActivityLogger activityLogger;
 
     private Search search;
     private boolean isEditMode = false;
     private String selectedPhotoPath = null;
+    private String currentUser = null; // Track logged-in user for activity logging
 //    private int recentlyAddedDog = 0;
 
     /**
@@ -58,6 +64,9 @@ public class DogView extends javax.swing.JFrame {
         controller.loadInitialData();
 
         userController = new UserController();
+        adoptionController = new AdoptionController();
+
+        activityLogger = new ActivityLogger();
 
         initComponents();
         setLocationRelativeTo(null);
@@ -131,9 +140,27 @@ public class DogView extends javax.swing.JFrame {
         userSortLabel = new javax.swing.JLabel();
         userRefreshButton = new javax.swing.JButton();
         userAdoptPanel = new javax.swing.JPanel();
+        adoptionForm = new javax.swing.JPanel();
+        applicantNameLabel = new javax.swing.JLabel();
+        applicantEmailLabel = new javax.swing.JLabel();
+        applicantPhoneLabel = new javax.swing.JLabel();
+        applicantAddressLabel = new javax.swing.JLabel();
+        applicantPreferredBreedLabel = new javax.swing.JLabel();
+        applicantPreferredAgeLabel = new javax.swing.JLabel();
+        applyButton = new javax.swing.JButton();
+        clearAdoptionFieldsButton = new javax.swing.JButton();
+        applicantEmailField = new javax.swing.JTextField();
+        applicantNameField = new javax.swing.JTextField();
+        applicantPhoneField = new javax.swing.JTextField();
+        applicantAddressField = new javax.swing.JTextField();
+        preferredBreedField = new javax.swing.JTextField();
+        preferredAgeField = new javax.swing.JTextField();
+        appointmentPanelTitle = new javax.swing.JPanel();
+        welcomeTitleLabel1 = new javax.swing.JLabel();
         userProfilePanel = new javax.swing.JPanel();
         dogProfilePanel = new javax.swing.JPanel();
         dogProfileFooterPanel = new javax.swing.JPanel();
+        applyForAdoptionButton = new javax.swing.JButton();
         dogProfileHeaderPanel = new javax.swing.JPanel();
         profileTitleButton = new javax.swing.JLabel();
         backToDogsButton = new javax.swing.JButton();
@@ -179,7 +206,8 @@ public class DogView extends javax.swing.JFrame {
         instructionLabel = new javax.swing.JLabel();
         adminPanel = new javax.swing.JPanel();
         headerPanel = new javax.swing.JPanel();
-        logoLabel = new javax.swing.JLabel();
+        logoLabel = new javax.swing.JLabel(PhotoHelper.getThumbnail("src\\assets\\icons\\ps_logo_round.png"));
+        logoutButtonAdmin = new javax.swing.JButton();
         navigationPanel = new javax.swing.JPanel();
         dashboardButton = new javax.swing.JButton();
         dogsPanelButton = new javax.swing.JButton();
@@ -201,6 +229,10 @@ public class DogView extends javax.swing.JFrame {
         totalAdoptedPanel = new javax.swing.JPanel();
         totalAdoptedLabel = new javax.swing.JLabel();
         totalAdoptedCountLabel = new javax.swing.JLabel();
+        activitiesPanel = new javax.swing.JPanel();
+        totalAdoptedLabel1 = new javax.swing.JLabel();
+        jScrollPane1 = new javax.swing.JScrollPane();
+        activitiesTextArea = new javax.swing.JTextArea();
         dogsPanel = new javax.swing.JPanel();
         tablePanel = new javax.swing.JPanel();
         dogScrollPane = new javax.swing.JScrollPane();
@@ -256,10 +288,19 @@ public class DogView extends javax.swing.JFrame {
         removePhotoButton = new javax.swing.JButton();
         usersManagementPanel = new javax.swing.JPanel();
         adoptionsPanel = new javax.swing.JPanel();
+        adoptionTablePanel = new javax.swing.JPanel();
+        adoptionScrollPane = new javax.swing.JScrollPane();
+        adoptionTable = new javax.swing.JTable();
+        rejectAdoptionButton = new javax.swing.JButton();
+        approveAdoptionButton = new javax.swing.JButton();
+        searchAdoptionTypeCombo = new javax.swing.JComboBox<>();
+        searchAdoptionField = new javax.swing.JTextField();
+        searchAdoptionButton = new javax.swing.JButton();
+        undoRejectOrAdoptButton = new javax.swing.JButton();
         historyPanel = new javax.swing.JPanel();
         adoptionHistoryTablePanel = new javax.swing.JPanel();
         adoptedDogScrollPane = new javax.swing.JScrollPane();
-        adoptedDogTable = new javax.swing.JTable();
+        adoptionHistoryTable = new javax.swing.JTable();
         clearAdoptionHistoryButton = new javax.swing.JButton();
         deletionHistoryTablePanel = new javax.swing.JPanel();
         deletedDogScrollPane = new javax.swing.JScrollPane();
@@ -267,6 +308,7 @@ public class DogView extends javax.swing.JFrame {
         clearDeleteHistoryButton = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setBackground(new java.awt.Color(220, 220, 220));
 
         mainPanel.setPreferredSize(new java.awt.Dimension(1200, 800));
         mainPanel.setLayout(new java.awt.CardLayout());
@@ -355,13 +397,16 @@ public class DogView extends javax.swing.JFrame {
 
         userHeaderPanel.add(userNavigationPanel, new org.netbeans.lib.awtextra.AbsoluteConstraints(370, 20, 490, 50));
 
+        logoutButtonUser.setBackground(new java.awt.Color(222, 158, 54));
+        logoutButtonUser.setFont(new java.awt.Font("Franklin Gothic Demi Cond", 1, 14)); // NOI18N
+        logoutButtonUser.setForeground(new java.awt.Color(51, 51, 51));
         logoutButtonUser.setText("Log out");
         logoutButtonUser.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 logoutButtonUserActionPerformed(evt);
             }
         });
-        userHeaderPanel.add(logoutButtonUser, new org.netbeans.lib.awtextra.AbsoluteConstraints(1090, 30, -1, -1));
+        userHeaderPanel.add(logoutButtonUser, new org.netbeans.lib.awtextra.AbsoluteConstraints(1090, 13, 100, 40));
 
         userContentPanel.setLayout(new java.awt.CardLayout());
 
@@ -742,17 +787,172 @@ public class DogView extends javax.swing.JFrame {
 
         userContentPanel.add(userDogsPanel, "userDogsCard");
 
-        userAdoptPanel.setBackground(new java.awt.Color(0, 102, 102));
+        userAdoptPanel.setBackground(new java.awt.Color(250, 250, 255));
+
+        adoptionForm.setBackground(new java.awt.Color(236, 240, 241));
+        adoptionForm.setBorder(javax.swing.BorderFactory.createTitledBorder(new javax.swing.border.LineBorder(new java.awt.Color(153, 153, 153), 1, true), "Applicant Information", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Franklin Gothic Medium Cond", 1, 24), new java.awt.Color(51, 51, 51))); // NOI18N
+        adoptionForm.setForeground(new java.awt.Color(0, 0, 0));
+        adoptionForm.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
+
+        applicantNameLabel.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        applicantNameLabel.setForeground(new java.awt.Color(0, 0, 0));
+        applicantNameLabel.setText("Name");
+        adoptionForm.add(applicantNameLabel, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 70, 71, -1));
+
+        applicantEmailLabel.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        applicantEmailLabel.setForeground(new java.awt.Color(0, 0, 0));
+        applicantEmailLabel.setText("Email");
+        adoptionForm.add(applicantEmailLabel, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 120, 71, -1));
+
+        applicantPhoneLabel.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        applicantPhoneLabel.setForeground(new java.awt.Color(0, 0, 0));
+        applicantPhoneLabel.setText("Phone");
+        adoptionForm.add(applicantPhoneLabel, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 180, 71, -1));
+
+        applicantAddressLabel.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        applicantAddressLabel.setForeground(new java.awt.Color(0, 0, 0));
+        applicantAddressLabel.setText("Address");
+        adoptionForm.add(applicantAddressLabel, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 240, 71, -1));
+
+        applicantPreferredBreedLabel.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        applicantPreferredBreedLabel.setForeground(new java.awt.Color(0, 0, 0));
+        applicantPreferredBreedLabel.setText("Preferred Breed");
+        adoptionForm.add(applicantPreferredBreedLabel, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 290, 100, -1));
+
+        applicantPreferredAgeLabel.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        applicantPreferredAgeLabel.setForeground(new java.awt.Color(0, 0, 0));
+        applicantPreferredAgeLabel.setText("Preferred Age");
+        adoptionForm.add(applicantPreferredAgeLabel, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 350, 110, -1));
+
+        applyButton.setBackground(new java.awt.Color(222, 158, 54));
+        applyButton.setFont(new java.awt.Font("Franklin Gothic Demi Cond", 0, 14)); // NOI18N
+        applyButton.setForeground(new java.awt.Color(255, 255, 255));
+        applyButton.setText("APPLY");
+        applyButton.setPreferredSize(new java.awt.Dimension(136, 32));
+        applyButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                applyButtonActionPerformed(evt);
+            }
+        });
+        adoptionForm.add(applyButton, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 420, -1, -1));
+
+        clearAdoptionFieldsButton.setBackground(new java.awt.Color(222, 158, 54));
+        clearAdoptionFieldsButton.setFont(new java.awt.Font("Franklin Gothic Demi Cond", 0, 14)); // NOI18N
+        clearAdoptionFieldsButton.setForeground(new java.awt.Color(255, 255, 255));
+        clearAdoptionFieldsButton.setText("CLEAR");
+        clearAdoptionFieldsButton.setPreferredSize(new java.awt.Dimension(136, 32));
+        clearAdoptionFieldsButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                clearAdoptionFieldsButtonActionPerformed(evt);
+            }
+        });
+        adoptionForm.add(clearAdoptionFieldsButton, new org.netbeans.lib.awtextra.AbsoluteConstraints(1040, 420, -1, -1));
+
+        applicantEmailField.setBackground(new java.awt.Color(204, 204, 204));
+        applicantEmailField.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        applicantEmailField.setForeground(new java.awt.Color(44, 62, 80));
+        applicantEmailField.setActionCommand("Breed");
+        applicantEmailField.setBorder(new javax.swing.border.LineBorder(new java.awt.Color(102, 102, 102), 2, true));
+        adoptionForm.add(applicantEmailField, new org.netbeans.lib.awtextra.AbsoluteConstraints(180, 120, 220, -1));
+
+        applicantNameField.setBackground(new java.awt.Color(204, 204, 204));
+        applicantNameField.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        applicantNameField.setForeground(new java.awt.Color(44, 62, 80));
+        applicantNameField.setActionCommand("Name");
+        applicantNameField.setBorder(new javax.swing.border.LineBorder(new java.awt.Color(102, 102, 102), 2, true));
+        applicantNameField.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                applicantNameFieldActionPerformed(evt);
+            }
+        });
+        adoptionForm.add(applicantNameField, new org.netbeans.lib.awtextra.AbsoluteConstraints(180, 70, 220, -1));
+
+        applicantPhoneField.setBackground(new java.awt.Color(204, 204, 204));
+        applicantPhoneField.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        applicantPhoneField.setForeground(new java.awt.Color(44, 62, 80));
+        applicantPhoneField.setActionCommand("Name");
+        applicantPhoneField.setBorder(new javax.swing.border.LineBorder(new java.awt.Color(102, 102, 102), 2, true));
+        applicantPhoneField.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                applicantPhoneFieldActionPerformed(evt);
+            }
+        });
+        adoptionForm.add(applicantPhoneField, new org.netbeans.lib.awtextra.AbsoluteConstraints(180, 180, 220, -1));
+
+        applicantAddressField.setBackground(new java.awt.Color(204, 204, 204));
+        applicantAddressField.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        applicantAddressField.setForeground(new java.awt.Color(44, 62, 80));
+        applicantAddressField.setActionCommand("Name");
+        applicantAddressField.setBorder(new javax.swing.border.LineBorder(new java.awt.Color(102, 102, 102), 2, true));
+        applicantAddressField.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                applicantAddressFieldActionPerformed(evt);
+            }
+        });
+        adoptionForm.add(applicantAddressField, new org.netbeans.lib.awtextra.AbsoluteConstraints(180, 240, 220, -1));
+
+        preferredBreedField.setBackground(new java.awt.Color(204, 204, 204));
+        preferredBreedField.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        preferredBreedField.setForeground(new java.awt.Color(44, 62, 80));
+        preferredBreedField.setActionCommand("Name");
+        preferredBreedField.setBorder(new javax.swing.border.LineBorder(new java.awt.Color(102, 102, 102), 2, true));
+        preferredBreedField.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                preferredBreedFieldActionPerformed(evt);
+            }
+        });
+        adoptionForm.add(preferredBreedField, new org.netbeans.lib.awtextra.AbsoluteConstraints(180, 290, 220, -1));
+
+        preferredAgeField.setBackground(new java.awt.Color(204, 204, 204));
+        preferredAgeField.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        preferredAgeField.setForeground(new java.awt.Color(44, 62, 80));
+        preferredAgeField.setActionCommand("Name");
+        preferredAgeField.setBorder(new javax.swing.border.LineBorder(new java.awt.Color(102, 102, 102), 2, true));
+        preferredAgeField.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                preferredAgeFieldActionPerformed(evt);
+            }
+        });
+        adoptionForm.add(preferredAgeField, new org.netbeans.lib.awtextra.AbsoluteConstraints(180, 350, 220, -1));
+
+        appointmentPanelTitle.setBackground(new java.awt.Color(222, 158, 54));
+
+        welcomeTitleLabel1.setFont(new java.awt.Font("Franklin Gothic Demi", 0, 28)); // NOI18N
+        welcomeTitleLabel1.setForeground(new java.awt.Color(0, 0, 0));
+        welcomeTitleLabel1.setText("<html><u>Book an appointment</u></html>");
+        welcomeTitleLabel1.setToolTipText("");
+
+        javax.swing.GroupLayout appointmentPanelTitleLayout = new javax.swing.GroupLayout(appointmentPanelTitle);
+        appointmentPanelTitle.setLayout(appointmentPanelTitleLayout);
+        appointmentPanelTitleLayout.setHorizontalGroup(
+            appointmentPanelTitleLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(appointmentPanelTitleLayout.createSequentialGroup()
+                .addGap(461, 461, 461)
+                .addComponent(welcomeTitleLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
+        appointmentPanelTitleLayout.setVerticalGroup(
+            appointmentPanelTitleLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(appointmentPanelTitleLayout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(welcomeTitleLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 59, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
 
         javax.swing.GroupLayout userAdoptPanelLayout = new javax.swing.GroupLayout(userAdoptPanel);
         userAdoptPanel.setLayout(userAdoptPanelLayout);
         userAdoptPanelLayout.setHorizontalGroup(
             userAdoptPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 1190, Short.MAX_VALUE)
+            .addComponent(adoptionForm, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 1190, Short.MAX_VALUE)
+            .addComponent(appointmentPanelTitle, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
         userAdoptPanelLayout.setVerticalGroup(
             userAdoptPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 704, Short.MAX_VALUE)
+            .addGroup(userAdoptPanelLayout.createSequentialGroup()
+                .addComponent(appointmentPanelTitle, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(36, 36, 36)
+                .addComponent(adoptionForm, javax.swing.GroupLayout.PREFERRED_SIZE, 467, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(130, Short.MAX_VALUE))
         );
 
         userContentPanel.add(userAdoptPanel, "userAdoptCard");
@@ -773,15 +973,34 @@ public class DogView extends javax.swing.JFrame {
         dogProfilePanel.setBackground(new java.awt.Color(250, 250, 255));
         dogProfilePanel.setLayout(new java.awt.BorderLayout());
 
+        dogProfileFooterPanel.setBackground(new java.awt.Color(250, 250, 250));
+        dogProfileFooterPanel.setPreferredSize(new java.awt.Dimension(1190, 70));
+
+        applyForAdoptionButton.setBackground(new java.awt.Color(222, 158, 54));
+        applyForAdoptionButton.setFont(new java.awt.Font("Franklin Gothic Demi Cond", 1, 14)); // NOI18N
+        applyForAdoptionButton.setForeground(new java.awt.Color(51, 51, 51));
+        applyForAdoptionButton.setText("Apply for Adoption");
+        applyForAdoptionButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                applyForAdoptionButtonActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout dogProfileFooterPanelLayout = new javax.swing.GroupLayout(dogProfileFooterPanel);
         dogProfileFooterPanel.setLayout(dogProfileFooterPanelLayout);
         dogProfileFooterPanelLayout.setHorizontalGroup(
             dogProfileFooterPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 1190, Short.MAX_VALUE)
+            .addGroup(dogProfileFooterPanelLayout.createSequentialGroup()
+                .addGap(468, 468, 468)
+                .addComponent(applyForAdoptionButton, javax.swing.GroupLayout.PREFERRED_SIZE, 227, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(495, Short.MAX_VALUE))
         );
         dogProfileFooterPanelLayout.setVerticalGroup(
             dogProfileFooterPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 100, Short.MAX_VALUE)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, dogProfileFooterPanelLayout.createSequentialGroup()
+                .addContainerGap(16, Short.MAX_VALUE)
+                .addComponent(applyForAdoptionButton, javax.swing.GroupLayout.PREFERRED_SIZE, 48, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap())
         );
 
         dogProfilePanel.add(dogProfileFooterPanel, java.awt.BorderLayout.PAGE_END);
@@ -826,9 +1045,9 @@ public class DogView extends javax.swing.JFrame {
             .addGroup(dogProfileHeaderPanelLayout.createSequentialGroup()
                 .addGap(30, 30, 30)
                 .addComponent(backToDogsButton, javax.swing.GroupLayout.PREFERRED_SIZE, 130, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(354, 354, 354)
+                .addGap(343, 343, 343)
                 .addComponent(profileTitleButton, javax.swing.GroupLayout.PREFERRED_SIZE, 132, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(544, Short.MAX_VALUE))
+                .addContainerGap(555, Short.MAX_VALUE))
         );
         dogProfileHeaderPanelLayout.setVerticalGroup(
             dogProfileHeaderPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -843,6 +1062,7 @@ public class DogView extends javax.swing.JFrame {
         dogProfilePanel.add(dogProfileHeaderPanel, java.awt.BorderLayout.PAGE_START);
 
         dogProfileContentPanel.setBackground(new java.awt.Color(250, 250, 250));
+        dogProfileContentPanel.setBorder(new javax.swing.border.LineBorder(new java.awt.Color(222, 158, 54), 2, true));
         dogProfileContentPanel.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
         dogProfileFormDetailsPanel.setBackground(new java.awt.Color(250, 250, 250));
@@ -1002,12 +1222,12 @@ public class DogView extends javax.swing.JFrame {
         dogProfileStatusField.setBorder(new javax.swing.border.LineBorder(new java.awt.Color(102, 102, 102), 2, true));
         dogProfileFormDetailsPanel.add(dogProfileStatusField, new org.netbeans.lib.awtextra.AbsoluteConstraints(760, 110, 210, -1));
 
-        dogProfileContentPanel.add(dogProfileFormDetailsPanel, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 300, 1190, 200));
+        dogProfileContentPanel.add(dogProfileFormDetailsPanel, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 350, 1190, 200));
 
         dogProfileNameLabel.setFont(new java.awt.Font("Franklin Gothic Demi Cond", 0, 24)); // NOI18N
         dogProfileNameLabel.setForeground(new java.awt.Color(0, 0, 0));
         dogProfileNameLabel.setText("Name");
-        dogProfileContentPanel.add(dogProfileNameLabel, new org.netbeans.lib.awtextra.AbsoluteConstraints(540, 260, 140, 30));
+        dogProfileContentPanel.add(dogProfileNameLabel, new org.netbeans.lib.awtextra.AbsoluteConstraints(540, 290, 130, 30));
 
         profilePhotoLabel.setText("jLabel1");
         dogProfileContentPanel.add(profilePhotoLabel, new org.netbeans.lib.awtextra.AbsoluteConstraints(440, 10, 250, 250));
@@ -1113,7 +1333,7 @@ public class DogView extends javax.swing.JFrame {
         loginPanelLayout.setHorizontalGroup(
             loginPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, loginPanelLayout.createSequentialGroup()
-                .addContainerGap(431, Short.MAX_VALUE)
+                .addContainerGap(433, Short.MAX_VALUE)
                 .addComponent(loginDetailsPanel, javax.swing.GroupLayout.PREFERRED_SIZE, 339, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(430, 430, 430))
         );
@@ -1136,21 +1356,32 @@ public class DogView extends javax.swing.JFrame {
 
         logoLabel.setText("LOGO");
 
+        logoutButtonAdmin.setText("Log out");
+        logoutButtonAdmin.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                logoutButtonAdminActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout headerPanelLayout = new javax.swing.GroupLayout(headerPanel);
         headerPanel.setLayout(headerPanelLayout);
         headerPanelLayout.setHorizontalGroup(
             headerPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(headerPanelLayout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(logoLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 75, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addGap(15, 15, 15)
+                .addComponent(logoLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 60, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 1024, Short.MAX_VALUE)
+                .addComponent(logoutButtonAdmin, javax.swing.GroupLayout.PREFERRED_SIZE, 95, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap())
         );
         headerPanelLayout.setVerticalGroup(
             headerPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(headerPanelLayout.createSequentialGroup()
-                .addGap(15, 15, 15)
-                .addComponent(logoLabel, javax.swing.GroupLayout.DEFAULT_SIZE, 49, Short.MAX_VALUE)
-                .addContainerGap())
+                .addGap(3, 3, 3)
+                .addGroup(headerPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(logoutButtonAdmin, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(logoLabel, javax.swing.GroupLayout.DEFAULT_SIZE, 70, Short.MAX_VALUE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         adminPanel.add(headerPanel);
@@ -1160,7 +1391,7 @@ public class DogView extends javax.swing.JFrame {
         navigationPanel.setMinimumSize(new java.awt.Dimension(200, 720));
         navigationPanel.setPreferredSize(new java.awt.Dimension(210, 720));
 
-        dashboardButton.setBackground(new java.awt.Color(102, 102, 102));
+        dashboardButton.setBackground(new java.awt.Color(44, 62, 80));
         dashboardButton.setFont(new java.awt.Font("Franklin Gothic Book", 0, 14)); // NOI18N
         dashboardButton.setForeground(new java.awt.Color(220, 220, 220));
         dashboardButton.setText("Dashboard");
@@ -1168,28 +1399,27 @@ public class DogView extends javax.swing.JFrame {
         dashboardButton.setBorderPainted(false);
         dashboardButton.setFocusPainted(false);
         dashboardButton.setPreferredSize(new java.awt.Dimension(70, 20));
-        dashboardButton.setRolloverEnabled(false);
         dashboardButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 dashboardButtonActionPerformed(evt);
             }
         });
 
-        dogsPanelButton.setBackground(new java.awt.Color(102, 102, 102));
+        dogsPanelButton.setBackground(new java.awt.Color(44, 62, 80));
         dogsPanelButton.setFont(new java.awt.Font("Franklin Gothic Book", 0, 14)); // NOI18N
         dogsPanelButton.setForeground(new java.awt.Color(220, 220, 220));
         dogsPanelButton.setText("Dogs");
         dogsPanelButton.setMargin(new java.awt.Insets(0, 0, 0, 0));
         dogsPanelButton.setPreferredSize(new java.awt.Dimension(70, 20));
-        dogsPanelButton.setRolloverEnabled(false);
         dogsPanelButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 dogsPanelButtonActionPerformed(evt);
             }
         });
 
-        usersPanelButton.setBackground(new java.awt.Color(102, 102, 102));
+        usersPanelButton.setBackground(new java.awt.Color(44, 62, 80));
         usersPanelButton.setFont(new java.awt.Font("Franklin Gothic Book", 0, 14)); // NOI18N
+        usersPanelButton.setForeground(new java.awt.Color(220, 220, 220));
         usersPanelButton.setText("Users");
         usersPanelButton.setPreferredSize(new java.awt.Dimension(200, 60));
         usersPanelButton.addActionListener(new java.awt.event.ActionListener() {
@@ -1198,8 +1428,9 @@ public class DogView extends javax.swing.JFrame {
             }
         });
 
-        adoptionsButton.setBackground(new java.awt.Color(102, 102, 102));
+        adoptionsButton.setBackground(new java.awt.Color(44, 62, 80));
         adoptionsButton.setFont(new java.awt.Font("Franklin Gothic Book", 0, 14)); // NOI18N
+        adoptionsButton.setForeground(new java.awt.Color(220, 220, 220));
         adoptionsButton.setText("Adoptions");
         adoptionsButton.setPreferredSize(new java.awt.Dimension(200, 60));
         adoptionsButton.addActionListener(new java.awt.event.ActionListener() {
@@ -1208,8 +1439,9 @@ public class DogView extends javax.swing.JFrame {
             }
         });
 
-        historyPanelButton.setBackground(new java.awt.Color(102, 102, 102));
+        historyPanelButton.setBackground(new java.awt.Color(44, 62, 80));
         historyPanelButton.setFont(new java.awt.Font("Franklin Gothic Book", 0, 14)); // NOI18N
+        historyPanelButton.setForeground(new java.awt.Color(220, 220, 220));
         historyPanelButton.setText("History");
         historyPanelButton.setPreferredSize(new java.awt.Dimension(200, 60));
         historyPanelButton.addActionListener(new java.awt.event.ActionListener() {
@@ -1335,7 +1567,7 @@ public class DogView extends javax.swing.JFrame {
 
         adoptionAppointmentsCountLabel.setFont(new java.awt.Font("Franklin Gothic Book", 0, 24)); // NOI18N
         adoptionAppointmentsCountLabel.setForeground(new java.awt.Color(0, 0, 0));
-        adoptionAppointmentsCountLabel.setText(String.valueOf(controller.getTotalDogs()));
+        adoptionAppointmentsCountLabel.setText(String.valueOf(adoptionController.getPendingApplicationsCount()));
 
         javax.swing.GroupLayout adoptionAppointmentsPanelLayout = new javax.swing.GroupLayout(adoptionAppointmentsPanel);
         adoptionAppointmentsPanel.setLayout(adoptionAppointmentsPanelLayout);
@@ -1394,13 +1626,33 @@ public class DogView extends javax.swing.JFrame {
 
         kpiPanel.add(totalAdoptedPanel, new org.netbeans.lib.awtextra.AbsoluteConstraints(15, 200, 290, 126));
 
+        activitiesPanel.setBackground(new java.awt.Color(225, 225, 225));
+        activitiesPanel.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
+
+        totalAdoptedLabel1.setFont(new java.awt.Font("Franklin Gothic Demi", 0, 28)); // NOI18N
+        totalAdoptedLabel1.setForeground(new java.awt.Color(0, 0, 0));
+        totalAdoptedLabel1.setText("Recent Activites");
+        activitiesPanel.add(totalAdoptedLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(400, 10, -1, -1));
+
+        activitiesTextArea.setEditable(false);
+        activitiesTextArea.setBackground(new java.awt.Color(0, 0, 0));
+        activitiesTextArea.setColumns(20);
+        activitiesTextArea.setFont(new java.awt.Font("DialogInput", 0, 14)); // NOI18N
+        activitiesTextArea.setForeground(new java.awt.Color(255, 255, 255));
+        activitiesTextArea.setRows(5);
+        jScrollPane1.setViewportView(activitiesTextArea);
+
+        activitiesPanel.add(jScrollPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 60, 960, 280));
+
         javax.swing.GroupLayout dashboardPanelLayout = new javax.swing.GroupLayout(dashboardPanel);
         dashboardPanel.setLayout(dashboardPanelLayout);
         dashboardPanelLayout.setHorizontalGroup(
             dashboardPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(dashboardPanelLayout.createSequentialGroup()
                 .addGap(15, 15, 15)
-                .addComponent(kpiPanel, javax.swing.GroupLayout.DEFAULT_SIZE, 979, Short.MAX_VALUE)
+                .addGroup(dashboardPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(activitiesPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(kpiPanel, javax.swing.GroupLayout.DEFAULT_SIZE, 979, Short.MAX_VALUE))
                 .addContainerGap())
         );
         dashboardPanelLayout.setVerticalGroup(
@@ -1408,7 +1660,9 @@ public class DogView extends javax.swing.JFrame {
             .addGroup(dashboardPanelLayout.createSequentialGroup()
                 .addGap(17, 17, 17)
                 .addComponent(kpiPanel, javax.swing.GroupLayout.PREFERRED_SIZE, 355, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(358, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(activitiesPanel, javax.swing.GroupLayout.PREFERRED_SIZE, 355, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         contentPanel.add(dashboardPanel, "dashboardCard");
@@ -1443,14 +1697,10 @@ public class DogView extends javax.swing.JFrame {
             dogTable.getColumnModel().getColumn(0).setMinWidth(40);
             dogTable.getColumnModel().getColumn(0).setPreferredWidth(60);
             dogTable.getColumnModel().getColumn(0).setMaxWidth(60);
-            dogTable.getColumnModel().getColumn(0).setHeaderValue("ID");
             dogTable.getColumnModel().getColumn(3).setMinWidth(40);
             dogTable.getColumnModel().getColumn(3).setPreferredWidth(60);
             dogTable.getColumnModel().getColumn(3).setMaxWidth(60);
-            dogTable.getColumnModel().getColumn(4).setHeaderValue("Gender");
-            dogTable.getColumnModel().getColumn(5).setHeaderValue("Weight (kg)");
             dogTable.getColumnModel().getColumn(7).setResizable(false);
-            dogTable.getColumnModel().getColumn(7).setHeaderValue("AdoptionStatus");
         }
 
         tablePanel.add(dogScrollPane, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 40, 838, 347));
@@ -1875,17 +2125,133 @@ public class DogView extends javax.swing.JFrame {
         contentPanel.add(usersManagementPanel, "usersManagementCard");
         usersManagementPanel.getAccessibleContext().setAccessibleName("");
 
-        adoptionsPanel.setBackground(new java.awt.Color(102, 102, 0));
+        adoptionsPanel.setBackground(new java.awt.Color(220, 220, 220));
+
+        adoptionTablePanel.setBackground(new java.awt.Color(220, 220, 220));
+        adoptionTablePanel.setPreferredSize(new java.awt.Dimension(800, 640));
+        adoptionTablePanel.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
+
+        adoptionTable.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+
+            },
+            new String [] {
+                "ID", "ApplicantName", "Email", "Phone", "Address", "Preferred Breed", "Preferred Age", "Status", "Date of application"
+            }
+        ) {
+            boolean[] canEdit = new boolean [] {
+                false, true, true, true, true, true, true, true, true
+            };
+
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit [columnIndex];
+            }
+        });
+        adoptionTable.setDragEnabled(true);
+        adoptionTable.setShowGrid(false);
+        adoptionTable.setShowHorizontalLines(true);
+        adoptionTable.setShowVerticalLines(true);
+        adoptionScrollPane.setViewportView(adoptionTable);
+        if (adoptionTable.getColumnModel().getColumnCount() > 0) {
+            adoptionTable.getColumnModel().getColumn(0).setMinWidth(40);
+            adoptionTable.getColumnModel().getColumn(0).setPreferredWidth(60);
+            adoptionTable.getColumnModel().getColumn(0).setMaxWidth(60);
+            adoptionTable.getColumnModel().getColumn(3).setMinWidth(40);
+            adoptionTable.getColumnModel().getColumn(3).setPreferredWidth(60);
+            adoptionTable.getColumnModel().getColumn(3).setMaxWidth(60);
+            adoptionTable.getColumnModel().getColumn(7).setResizable(false);
+        }
+
+        adoptionTablePanel.add(adoptionScrollPane, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 40, 990, 347));
+
+        rejectAdoptionButton.setBackground(new java.awt.Color(44, 62, 80));
+        rejectAdoptionButton.setFont(new java.awt.Font("Franklin Gothic Book", 0, 14)); // NOI18N
+        rejectAdoptionButton.setForeground(new java.awt.Color(255, 255, 255));
+        rejectAdoptionButton.setText("Reject");
+        rejectAdoptionButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                rejectAdoptionButtonActionPerformed(evt);
+            }
+        });
+        adoptionTablePanel.add(rejectAdoptionButton, new org.netbeans.lib.awtextra.AbsoluteConstraints(210, 410, 140, 40));
+
+        approveAdoptionButton.setBackground(new java.awt.Color(44, 62, 80));
+        approveAdoptionButton.setFont(new java.awt.Font("Franklin Gothic Book", 0, 14)); // NOI18N
+        approveAdoptionButton.setForeground(new java.awt.Color(255, 255, 255));
+        approveAdoptionButton.setText("Approve");
+        approveAdoptionButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                approveAdoptionButtonActionPerformed(evt);
+            }
+        });
+        adoptionTablePanel.add(approveAdoptionButton, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 410, 140, 40));
+
+        searchAdoptionTypeCombo.setBackground(new java.awt.Color(44, 62, 80));
+        searchAdoptionTypeCombo.setFont(new java.awt.Font("Franklin Gothic Book", 0, 12)); // NOI18N
+        searchAdoptionTypeCombo.setForeground(new java.awt.Color(250, 250, 250));
+        searchAdoptionTypeCombo.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "ID", "Name" }));
+        searchAdoptionTypeCombo.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                searchAdoptionTypeComboActionPerformed(evt);
+            }
+        });
+        adoptionTablePanel.add(searchAdoptionTypeCombo, new org.netbeans.lib.awtextra.AbsoluteConstraints(348, 6, -1, 25));
+
+        searchAdoptionField.setBackground(new java.awt.Color(210, 210, 210));
+        searchAdoptionField.setForeground(new java.awt.Color(0, 0, 0));
+        searchAdoptionField.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusGained(java.awt.event.FocusEvent evt) {
+                searchAdoptionFieldFocusGained(evt);
+            }
+            public void focusLost(java.awt.event.FocusEvent evt) {
+                searchAdoptionFieldFocusLost(evt);
+            }
+        });
+        searchAdoptionField.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                searchAdoptionFieldActionPerformed(evt);
+            }
+        });
+        searchField.setText("Enter " +searchTypeCombo.getSelectedItem() + " to search");
+        adoptionTablePanel.add(searchAdoptionField, new org.netbeans.lib.awtextra.AbsoluteConstraints(6, 6, 258, -1));
+
+        searchAdoptionButton.setBackground(new java.awt.Color(44, 62, 80));
+        searchAdoptionButton.setFont(new java.awt.Font("Franklin Gothic Book", 0, 12)); // NOI18N
+        searchAdoptionButton.setForeground(new java.awt.Color(255, 255, 255));
+        searchAdoptionButton.setText("Search");
+        searchAdoptionButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                searchAdoptionButtonActionPerformed(evt);
+            }
+        });
+        adoptionTablePanel.add(searchAdoptionButton, new org.netbeans.lib.awtextra.AbsoluteConstraints(270, 6, -1, 25));
+
+        undoRejectOrAdoptButton.setBackground(new java.awt.Color(44, 62, 80));
+        undoRejectOrAdoptButton.setFont(new java.awt.Font("Franklin Gothic Book", 0, 14)); // NOI18N
+        undoRejectOrAdoptButton.setForeground(new java.awt.Color(255, 255, 255));
+        undoRejectOrAdoptButton.setText("Undo");
+        undoRejectOrAdoptButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                undoRejectOrAdoptButtonActionPerformed(evt);
+            }
+        });
+        adoptionTablePanel.add(undoRejectOrAdoptButton, new org.netbeans.lib.awtextra.AbsoluteConstraints(400, 410, 140, 40));
 
         javax.swing.GroupLayout adoptionsPanelLayout = new javax.swing.GroupLayout(adoptionsPanel);
         adoptionsPanel.setLayout(adoptionsPanelLayout);
         adoptionsPanelLayout.setHorizontalGroup(
             adoptionsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 1000, Short.MAX_VALUE)
+            .addGroup(adoptionsPanelLayout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(adoptionTablePanel, javax.swing.GroupLayout.DEFAULT_SIZE, 990, Short.MAX_VALUE)
+                .addGap(4, 4, 4))
         );
         adoptionsPanelLayout.setVerticalGroup(
             adoptionsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 730, Short.MAX_VALUE)
+            .addGroup(adoptionsPanelLayout.createSequentialGroup()
+                .addGap(52, 52, 52)
+                .addComponent(adoptionTablePanel, javax.swing.GroupLayout.PREFERRED_SIZE, 481, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(197, Short.MAX_VALUE))
         );
 
         contentPanel.add(adoptionsPanel, "adoptionsCard");
@@ -1897,33 +2263,30 @@ public class DogView extends javax.swing.JFrame {
         adoptionHistoryTablePanel.setPreferredSize(new java.awt.Dimension(800, 640));
         adoptionHistoryTablePanel.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
-        adoptedDogTable.setModel(new javax.swing.table.DefaultTableModel(
+        adoptionHistoryTable.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {null, null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null, null}
+                {null, null, null, null, null},
+                {null, null, null, null, null},
+                {null, null, null, null, null},
+                {null, null, null, null, null}
             },
             new String [] {
-                "ID", "Name", "Breed", "Age", "Gender", "Weight (kg)", "Color", "AdoptionStatus"
+                "ID", "Applicant Name", "Email", "AdoptionStatus", "Time"
             }
         ) {
             boolean[] canEdit = new boolean [] {
-                false, true, true, true, true, true, true, true
+                false, true, true, true, true
             };
 
             public boolean isCellEditable(int rowIndex, int columnIndex) {
                 return canEdit [columnIndex];
             }
         });
-        adoptedDogScrollPane.setViewportView(adoptedDogTable);
-        if (adoptedDogTable.getColumnModel().getColumnCount() > 0) {
-            adoptedDogTable.getColumnModel().getColumn(0).setMinWidth(40);
-            adoptedDogTable.getColumnModel().getColumn(0).setPreferredWidth(60);
-            adoptedDogTable.getColumnModel().getColumn(0).setMaxWidth(60);
-            adoptedDogTable.getColumnModel().getColumn(3).setMinWidth(40);
-            adoptedDogTable.getColumnModel().getColumn(3).setPreferredWidth(60);
-            adoptedDogTable.getColumnModel().getColumn(3).setMaxWidth(60);
+        adoptedDogScrollPane.setViewportView(adoptionHistoryTable);
+        if (adoptionHistoryTable.getColumnModel().getColumnCount() > 0) {
+            adoptionHistoryTable.getColumnModel().getColumn(0).setMinWidth(40);
+            adoptionHistoryTable.getColumnModel().getColumn(0).setPreferredWidth(60);
+            adoptionHistoryTable.getColumnModel().getColumn(0).setMaxWidth(60);
         }
 
         adoptionHistoryTablePanel.add(adoptedDogScrollPane, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 40, 838, 290));
@@ -2035,6 +2398,10 @@ public class DogView extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void logoutButtonUserActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_logoutButtonUserActionPerformed
+        if (currentUser != null) {
+            activityLogger.log("🔓", currentUser, "logged out");
+        }
+        currentUser = null;
         cardLayout.show(mainPanel, "loginCard");
     }//GEN-LAST:event_logoutButtonUserActionPerformed
 
@@ -2048,6 +2415,8 @@ public class DogView extends javax.swing.JFrame {
 
     private void dashboardButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_dashboardButtonActionPerformed
         cardLayoutAdmin.show(contentPanel, "dashboardCard");
+        updateDashboardKPIs();
+        loadRecentActivities();
     }//GEN-LAST:event_dashboardButtonActionPerformed
 
     private void dogsPanelButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_dogsPanelButtonActionPerformed
@@ -2129,6 +2498,8 @@ public class DogView extends javax.swing.JFrame {
                     controller.loadDataToTable(dogTable);
                     controller.loadDeletionHistoryToTable(deletedDogTable);
                     controller.loadToUserDogTable(userDogTable);
+
+                    activityLogger.logDeleteDog(currentUser, "Dog ID: " + id);
 
                     JOptionPane.showMessageDialog(
                             this,
@@ -2280,6 +2651,11 @@ public class DogView extends javax.swing.JFrame {
             return;
         }
 
+        // Store current user for logging
+        currentUser = username;
+        activityLogger.logLogin(username);
+        loadRecentActivities();
+        updateDashboardKPIs();
         // Login successful - switch panel based on role
         CardLayout cl = (CardLayout) mainPanel.getLayout();
 
@@ -2287,6 +2663,7 @@ public class DogView extends javax.swing.JFrame {
             cardLayout.show(mainPanel, "adminCard");
         } else {
             cardLayout.show(mainPanel, "userCard");
+            cardLayoutUser.show(userContentPanel, "userHomeCard");
         }
 
         // Clear fields
@@ -2694,6 +3071,7 @@ public class DogView extends javax.swing.JFrame {
                         "Error",
                         JOptionPane.ERROR_MESSAGE);
             } else {
+                activityLogger.logAddDog(currentUser, name);
                 controller.loadDataToTable(dogTable);
                 controller.loadToUserDogTable(userDogTable);
                 JOptionPane.showMessageDialog(this,
@@ -2833,6 +3211,7 @@ public class DogView extends javax.swing.JFrame {
             if (success) {
                 controller.loadDataToTable(dogTable);
                 controller.loadToUserDogTable(userDogTable);
+                activityLogger.logUpdateDog(currentUser, name);
                 JOptionPane.showMessageDialog(this,
                         "Dog updated successfully!",
                         "Success",
@@ -2892,6 +3271,280 @@ public class DogView extends javax.swing.JFrame {
         homeButton.setBorder(null);
         navigationAdoptButton.setBorder(null);
     }//GEN-LAST:event_backToDogsButtonActionPerformed
+
+    private void logoutButtonAdminActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_logoutButtonAdminActionPerformed
+        if (currentUser != null) {
+            activityLogger.log("🔓", currentUser, "logged out");
+        }
+        currentUser = null;
+        cardLayout.show(mainPanel, "loginCard");
+    }//GEN-LAST:event_logoutButtonAdminActionPerformed
+
+    private void applyForAdoptionButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_applyForAdoptionButtonActionPerformed
+        cardLayoutUser.show(userContentPanel, "userAdoptCard");
+    }//GEN-LAST:event_applyForAdoptionButtonActionPerformed
+
+    private void rejectAdoptionButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_rejectAdoptionButtonActionPerformed
+        int selectedRow = adoptionTable.getSelectedRow();
+
+        if (selectedRow == -1) {
+            JOptionPane.showMessageDialog(this,
+                    "Please select an application to reject",
+                    "No Selection",
+                    JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+
+        // Get application ID from selected row
+        int modelRow = adoptionTable.convertRowIndexToModel(selectedRow);
+        int applicationId = (int) adoptionTable.getModel().getValueAt(modelRow, 0);
+        String applicantName = (String) adoptionTable.getModel().getValueAt(modelRow, 1);
+
+        // Optional: Ask for rejection reason
+        String reason = JOptionPane.showInputDialog(this,
+                "Enter reason for rejection (optional):",
+                "Rejection Reason",
+                JOptionPane.QUESTION_MESSAGE);
+
+        if (reason == null) {
+            // User cancelled
+            return;
+        }
+
+        // Confirmation dialog
+        int confirm = JOptionPane.showConfirmDialog(this,
+                "<html><div style='font-size:12px'>"
+                + "<b>Reject Adoption Application?</b><br><br>"
+                + "Application ID: <b>" + applicationId + "</b><br>"
+                + "Applicant: <b>" + applicantName + "</b><br>"
+                + (reason != null && !reason.isEmpty() ? "Reason: " + reason + "<br><br>" : "<br>")
+                + "This will mark the application as 'Rejected'."
+                + "</div></html>",
+                "Confirm Rejection",
+                JOptionPane.YES_NO_OPTION,
+                JOptionPane.WARNING_MESSAGE);
+
+        if (confirm == JOptionPane.YES_OPTION) {
+            // Update status in controller
+            boolean success = adoptionController.updateApplicationStatus(applicationId, "Rejected");
+
+            if (success) {
+                // Refresh table
+                adoptionController.loadAdoptionApplications(adoptionTable);
+                adoptionController.loadAdoptionHistoryToTable(adoptionHistoryTable);
+
+                activityLogger.logRejectApplication(currentUser, applicationId);
+
+                // Success message
+                JOptionPane.showMessageDialog(this,
+                        "<html><div style='font-size:12px'>"
+                        + "<b>Application Rejected</b><br><br>"
+                        + "Application ID: " + applicationId + "<br>"
+                        + "Applicant: " + applicantName + "<br><br>"
+                        + "Status has been updated to 'Rejected'."
+                        + "</div></html>",
+                        "Rejection Complete",
+                        JOptionPane.INFORMATION_MESSAGE);
+            } else {
+                JOptionPane.showMessageDialog(this,
+                        "Failed to reject application. Please try again.",
+                        "Error",
+                        JOptionPane.ERROR_MESSAGE);
+            }
+        }
+    }//GEN-LAST:event_rejectAdoptionButtonActionPerformed
+
+    private void approveAdoptionButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_approveAdoptionButtonActionPerformed
+        int selectedRow = adoptionTable.getSelectedRow();
+
+        if (selectedRow == -1) {
+            JOptionPane.showMessageDialog(this,
+                    "Please select an application to approve",
+                    "No Selection",
+                    JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+
+        // Get application ID from selected row
+        int modelRow = adoptionTable.convertRowIndexToModel(selectedRow);
+        int applicationId = (int) adoptionTable.getModel().getValueAt(modelRow, 0);
+        String applicantName = (String) adoptionTable.getModel().getValueAt(modelRow, 1);
+
+        // Confirmation dialog
+        int confirm = JOptionPane.showConfirmDialog(this,
+                "<html><div style='font-size:12px'>"
+                + "<b>Approve Adoption Application?</b><br><br>"
+                + "Application ID: <b>" + applicationId + "</b><br>"
+                + "Applicant: <b>" + applicantName + "</b><br><br>"
+                + "This will mark the application as 'Approved'."
+                + "</div></html>",
+                "Confirm Approval",
+                JOptionPane.YES_NO_OPTION,
+                JOptionPane.QUESTION_MESSAGE);
+
+        if (confirm == JOptionPane.YES_OPTION) {
+            // Update status in controller
+            boolean success = adoptionController.updateApplicationStatus(applicationId, "Approved");
+
+            if (success) {
+                // Refresh table
+                adoptionController.loadAdoptionApplications(adoptionTable);
+                adoptionController.loadAdoptionHistoryToTable(adoptionHistoryTable);
+
+                activityLogger.logApproveApplication(currentUser, applicationId);
+
+                // Success message
+                JOptionPane.showMessageDialog(this,
+                        "<html><div style='font-size:12px'>"
+                        + "<b>Application Approved!</b><br><br>"
+                        + "Application ID: " + applicationId + "<br>"
+                        + "Applicant: " + applicantName + "<br><br>"
+                        + "Status has been updated to 'Approved'."
+                        + "</div></html>",
+                        "Approval Successful",
+                        JOptionPane.INFORMATION_MESSAGE);
+            } else {
+                JOptionPane.showMessageDialog(this,
+                        "Failed to approve application. Please try again.",
+                        "Error",
+                        JOptionPane.ERROR_MESSAGE);
+            }
+        }
+    }//GEN-LAST:event_approveAdoptionButtonActionPerformed
+
+    private void searchAdoptionTypeComboActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_searchAdoptionTypeComboActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_searchAdoptionTypeComboActionPerformed
+
+    private void searchAdoptionFieldFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_searchAdoptionFieldFocusGained
+        // TODO add your handling code here:
+    }//GEN-LAST:event_searchAdoptionFieldFocusGained
+
+    private void searchAdoptionFieldFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_searchAdoptionFieldFocusLost
+        // TODO add your handling code here:
+    }//GEN-LAST:event_searchAdoptionFieldFocusLost
+
+    private void searchAdoptionFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_searchAdoptionFieldActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_searchAdoptionFieldActionPerformed
+
+    private void searchAdoptionButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_searchAdoptionButtonActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_searchAdoptionButtonActionPerformed
+
+    private void undoRejectOrAdoptButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_undoRejectOrAdoptButtonActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_undoRejectOrAdoptButtonActionPerformed
+
+    private void applyButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_applyButtonActionPerformed
+        try {
+            String name = applicantNameField.getText().trim();
+            String email = applicantEmailField.getText().trim();
+            String phone = applicantPhoneField.getText().trim();
+            String address = applicantAddressField.getText().trim();
+            String breed = preferredBreedField.getText().trim();
+            String age = preferredAgeField.getText().trim();
+            Integer.parseInt(age);
+
+            // Validation
+            if (name.isEmpty() || email.isEmpty() || phone.isEmpty() || address.isEmpty()) {
+                JOptionPane.showMessageDialog(this,
+                        "Please fill in all required fields:\n"
+                        + "• Name\n• Email\n• Phone\n• Address",
+                        "Missing Information",
+                        JOptionPane.WARNING_MESSAGE);
+                return;
+            }
+
+            // Email validation
+            if (!email.matches("^[\\w-\\.]+@([\\w-]+\\.)+[\\w-]{2,4}$")) {
+                JOptionPane.showMessageDialog(this,
+                        "Please enter a valid email address",
+                        "Invalid Email",
+                        JOptionPane.WARNING_MESSAGE);
+                return;
+            }
+
+            // Phone validation (simple - at least 10 digits)
+            String digitsOnly = phone.replaceAll("\\D", "");
+            if (digitsOnly.length() < 7) {
+                JOptionPane.showMessageDialog(this,
+                        "Please enter a valid phone number (at least 10 digits)",
+                        "Invalid Phone",
+                        JOptionPane.WARNING_MESSAGE);
+                return;
+            }
+
+            // Create and submit application
+            AdoptionApplication application = new AdoptionApplication(
+                    name, email, phone, address, breed, age
+            );
+
+            boolean success = adoptionController.submitAdoptionApplication(application);
+
+            if (success) {
+                String message = String.format(
+                        "<html><div style='text-align:center'>"
+                        + "<h3>Application Submitted Successfully!</h3>"
+                        + "<b>Application ID:</b> %d<br>"
+                        + "<b>Name:</b> %s<br>"
+                        + "<b>Preferred Breed:</b> %s<br>"
+                        + "<b>Preferred Age:</b> %s<br><br>"
+                        + "We will contact you at:<br>"
+                        + "%s<br>"
+                        + "%s<br><br>"
+                        + "<i>Thank you for considering adoption!</i>"
+                        + "</div></html>",
+                        application.getApplicationId(),
+                        name,
+                        breed.isEmpty() ? "Any" : breed,
+                        age,
+                        email,
+                        phone
+                );
+                activityLogger.logSubmitApplication(currentUser, name);
+                adoptionController.loadAdoptionApplications(adoptionTable);
+                JOptionPane.showMessageDialog(this,
+                        new JLabel(message),
+                        "Application Submitted",
+                        JOptionPane.INFORMATION_MESSAGE);
+            } else {
+                JOptionPane.showMessageDialog(this,
+                        "Failed to submit application. Please try again.",
+                        "Error",
+                        JOptionPane.ERROR_MESSAGE);
+            }
+        } catch (NumberFormatException e) {
+            JOptionPane.showMessageDialog(this,
+                    "Invalid age. Please enter a valid age",
+                    "Error",
+                    JOptionPane.ERROR_MESSAGE);
+        }
+    }//GEN-LAST:event_applyButtonActionPerformed
+
+    private void clearAdoptionFieldsButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_clearAdoptionFieldsButtonActionPerformed
+        clearAdoptionForm();
+    }//GEN-LAST:event_clearAdoptionFieldsButtonActionPerformed
+
+    private void applicantNameFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_applicantNameFieldActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_applicantNameFieldActionPerformed
+
+    private void applicantPhoneFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_applicantPhoneFieldActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_applicantPhoneFieldActionPerformed
+
+    private void applicantAddressFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_applicantAddressFieldActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_applicantAddressFieldActionPerformed
+
+    private void preferredBreedFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_preferredBreedFieldActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_preferredBreedFieldActionPerformed
+
+    private void preferredAgeFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_preferredAgeFieldActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_preferredAgeFieldActionPerformed
 
     private void errorFieldFocus(JTextField field, JLabel errorLabel, String message) {
         field.setBorder(BorderFactory.createLineBorder(Color.RED, 2));
@@ -3136,6 +3789,15 @@ public class DogView extends javax.swing.JFrame {
         }
     }
 
+    private void clearAdoptionForm() {
+        applicantNameField.setText("");
+        applicantEmailField.setText("");
+        applicantPhoneField.setText("");
+        applicantAddressField.setText("");
+        preferredBreedField.setText("");
+        preferredAgeField.setText("");
+    }
+
     private void setupTableButtonColumn() {
         // Button is now in column 5 (last column)
         int buttonColumn = 5;
@@ -3224,7 +3886,38 @@ public class DogView extends javax.swing.JFrame {
         // Set photo
         ImageIcon photo = PhotoHelper.getProfile(dog.getPhotoPath());
         profilePhotoLabel.setIcon(photo);
+    }
 
+    private void loadRecentActivities() {
+        String[] activities = activityLogger.getRecentActivities();
+
+        if (activities.length == 0) {
+            activitiesTextArea.setText("No recent activities.");
+            return;
+        }
+
+        // Simple display
+        StringBuilder sb = new StringBuilder();
+
+        for (String activity : activities) {
+            sb.append("• ").append(activity).append("\n\n");
+        }
+
+        activitiesTextArea.setText(sb.toString());
+        activitiesTextArea.setFont(new Font("Monospaced", Font.PLAIN, 12));
+    }
+
+    private void updateDashboardKPIs() {
+        // Update all KPI labels on the dashboard
+        totalDogsCountLabel.setText(controller.getTotalDogs());
+        addedTodayCountLabel.setText(addedTodayCount());
+        adoptionAppointmentsCountLabel.setText(String.valueOf(adoptionController.getPendingApplicationsCount()));
+        totalAdoptedCountLabel.setText(controller.getAdoptedDogsCount());
+        
+        // Also update the statistics details panel
+        dogsInShelterNumberLabel.setText(controller.getTotalDogs());
+        dogsInShelterNumberLabel1.setText(controller.getUnadoptedDogsCount());
+        dogsInShelterNumberLabel2.setText(controller.getAdoptedDogsCount());
     }
 
     /**
@@ -3253,18 +3946,24 @@ public class DogView extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JPanel activitiesPanel;
+    private javax.swing.JTextArea activitiesTextArea;
     private javax.swing.JButton addDogButton;
     private javax.swing.JLabel addedTodayCountLabel;
     private javax.swing.JLabel addedTodayLabel;
     private javax.swing.JPanel addedTodayPanel;
     private javax.swing.JPanel adminPanel;
     private javax.swing.JScrollPane adoptedDogScrollPane;
-    private javax.swing.JTable adoptedDogTable;
     private javax.swing.JLabel adoptedInShelterLabel;
     private javax.swing.JLabel adoptionAppointmentsCountLabel;
     private javax.swing.JPanel adoptionAppointmentsPanel;
+    private javax.swing.JPanel adoptionForm;
+    private javax.swing.JTable adoptionHistoryTable;
     private javax.swing.JPanel adoptionHistoryTablePanel;
+    private javax.swing.JScrollPane adoptionScrollPane;
     private javax.swing.JComboBox<String> adoptionStatusComboBox;
+    private javax.swing.JTable adoptionTable;
+    private javax.swing.JPanel adoptionTablePanel;
     private javax.swing.JButton adoptionsButton;
     private javax.swing.JLabel adoptionsLabel;
     private javax.swing.JPanel adoptionsPanel;
@@ -3272,12 +3971,27 @@ public class DogView extends javax.swing.JFrame {
     private javax.swing.JLabel ageErrorLabel1;
     private javax.swing.JPanel ageErrorPanel;
     private javax.swing.JPanel ageErrorPanel1;
+    private javax.swing.JTextField applicantAddressField;
+    private javax.swing.JLabel applicantAddressLabel;
+    private javax.swing.JTextField applicantEmailField;
+    private javax.swing.JLabel applicantEmailLabel;
+    private javax.swing.JTextField applicantNameField;
+    private javax.swing.JLabel applicantNameLabel;
+    private javax.swing.JTextField applicantPhoneField;
+    private javax.swing.JLabel applicantPhoneLabel;
+    private javax.swing.JLabel applicantPreferredAgeLabel;
+    private javax.swing.JLabel applicantPreferredBreedLabel;
+    private javax.swing.JButton applyButton;
+    private javax.swing.JButton applyForAdoptionButton;
+    private javax.swing.JPanel appointmentPanelTitle;
+    private javax.swing.JButton approveAdoptionButton;
     private javax.swing.JLabel availableInShelterLabel;
     private javax.swing.JButton backToDogsButton;
     private javax.swing.JLabel breedErrorLabel;
     private javax.swing.JLabel breedErrorLabel1;
     private javax.swing.JPanel breedErrorPanel;
     private javax.swing.JButton cancelButton;
+    private javax.swing.JButton clearAdoptionFieldsButton;
     private javax.swing.JButton clearAdoptionHistoryButton;
     private javax.swing.JButton clearDeleteHistoryButton;
     private javax.swing.JButton clearFieldsButton;
@@ -3364,6 +4078,7 @@ public class DogView extends javax.swing.JFrame {
     private javax.swing.JPanel idErrorPanel;
     private javax.swing.JPanel idErrorPanel1;
     private javax.swing.JLabel instructionLabel;
+    private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JPanel kpiPanel;
     private javax.swing.JButton loginButton;
     private javax.swing.JPanel loginDetailsPanel;
@@ -3372,6 +4087,7 @@ public class DogView extends javax.swing.JFrame {
     private javax.swing.JPasswordField loginPasswordField;
     private javax.swing.JTextField loginUsernameField;
     private javax.swing.JLabel logoLabel;
+    private javax.swing.JButton logoutButtonAdmin;
     private javax.swing.JButton logoutButtonUser;
     private javax.swing.JPanel mainPanel;
     private javax.swing.JRadioButton maleRadioButton;
@@ -3382,11 +4098,17 @@ public class DogView extends javax.swing.JFrame {
     private javax.swing.JButton navigationAdoptButton;
     private javax.swing.JPanel navigationPanel;
     private javax.swing.JLabel photoFormLabel;
+    private javax.swing.JTextField preferredAgeField;
+    private javax.swing.JTextField preferredBreedField;
     private javax.swing.JLabel profilePhotoLabel;
     private javax.swing.JLabel profileTitleButton;
     private javax.swing.JButton refreshTableButton;
+    private javax.swing.JButton rejectAdoptionButton;
     private javax.swing.JButton removePhotoButton;
     private javax.swing.JButton saveButton;
+    private javax.swing.JButton searchAdoptionButton;
+    private javax.swing.JTextField searchAdoptionField;
+    private javax.swing.JComboBox<String> searchAdoptionTypeCombo;
     private javax.swing.JButton searchDogButton;
     private javax.swing.JTextField searchField;
     private javax.swing.JComboBox<String> searchTypeCombo;
@@ -3399,11 +4121,13 @@ public class DogView extends javax.swing.JFrame {
     private javax.swing.JPanel tablePanel;
     private javax.swing.JLabel totalAdoptedCountLabel;
     private javax.swing.JLabel totalAdoptedLabel;
+    private javax.swing.JLabel totalAdoptedLabel1;
     private javax.swing.JPanel totalAdoptedPanel;
     private javax.swing.JLabel totalDogsCountLabel;
     private javax.swing.JLabel totalDogsLabel;
     private javax.swing.JPanel totalDogsPanel;
     private javax.swing.JButton undoDeleteButton;
+    private javax.swing.JButton undoRejectOrAdoptButton;
     private javax.swing.JButton updateDogButton;
     private javax.swing.JButton uploadPhotoButton;
     private javax.swing.JPanel userAdoptPanel;
@@ -3434,5 +4158,6 @@ public class DogView extends javax.swing.JFrame {
     private javax.swing.JLabel welcomeMessageLabel;
     private javax.swing.JPanel welcomePanel;
     private javax.swing.JLabel welcomeTitleLabel;
+    private javax.swing.JLabel welcomeTitleLabel1;
     // End of variables declaration//GEN-END:variables
 }
